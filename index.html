@@ -1,172 +1,93 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/styles.css b/styles.css
-new file mode 100644
-index 0000000000000000000000000000000000000000..2a1fa76aab5403c39375474292f72243927193b9
---- /dev/null
-+++ b/styles.css
-@@ -0,0 +1,162 @@
-+:root {
-+  --bg: #f5f0ea;
-+  --card: #ffffff;
-+  --text: #2a2420;
-+  --muted: #6d6259;
-+  --accent: #a31621;
-+  --accent-dark: #7d121a;
-+  --border: #e7ddd3;
-+}
-+
-+* {
-+  box-sizing: border-box;
-+}
-+
-+body {
-+  margin: 0;
-+  font-family: "Inter", Arial, sans-serif;
-+  color: var(--text);
-+  background: var(--bg);
-+  line-height: 1.6;
-+}
-+
-+.hero {
-+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.5)),
-+    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80")
-+      center/cover no-repeat;
-+  color: #fff;
-+  min-height: 70vh;
-+  padding: 1.2rem clamp(1rem, 4vw, 3rem) 4rem;
-+  display: flex;
-+  flex-direction: column;
-+}
-+
-+.top-nav {
-+  display: flex;
-+  justify-content: space-between;
-+  align-items: center;
-+  flex-wrap: wrap;
-+  gap: 0.75rem;
-+}
-+
-+.top-nav h1 {
-+  font-family: "Playfair Display", Georgia, serif;
-+  font-size: clamp(1.8rem, 3vw, 2.4rem);
-+  margin: 0;
-+}
-+
-+.top-nav ul {
-+  list-style: none;
-+  display: flex;
-+  gap: 1rem;
-+  margin: 0;
-+  padding: 0;
-+}
-+
-+.top-nav a {
-+  color: #fff;
-+  text-decoration: none;
-+  font-weight: 500;
-+}
-+
-+.hero-content {
-+  margin-top: auto;
-+  max-width: 42rem;
-+}
-+
-+.tag {
-+  text-transform: uppercase;
-+  letter-spacing: 0.08em;
-+  font-size: 0.84rem;
-+  opacity: 0.9;
-+}
-+
-+.hero h2 {
-+  font-family: "Playfair Display", Georgia, serif;
-+  font-size: clamp(2rem, 5vw, 3.4rem);
-+  line-height: 1.15;
-+  margin: 0.5rem 0 1.4rem;
-+}
-+
-+.button {
-+  display: inline-block;
-+  background: var(--accent);
-+  color: #fff;
-+  padding: 0.75rem 1.2rem;
-+  border-radius: 0.45rem;
-+  text-decoration: none;
-+  font-weight: 600;
-+}
-+
-+.button:hover {
-+  background: var(--accent-dark);
-+}
-+
-+.section {
-+  width: min(1100px, 92%);
-+  margin: 2.5rem auto;
-+}
-+
-+h3 {
-+  font-family: "Playfair Display", Georgia, serif;
-+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-+  margin-bottom: 0.6rem;
-+}
-+
-+.about p,
-+.contact p,
-+.menu-note {
-+  color: var(--muted);
-+}
-+
-+.menu-grid {
-+  display: grid;
-+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-+  gap: 1rem;
-+  margin-top: 1.2rem;
-+}
-+
-+.menu-card {
-+  background: var(--card);
-+  border: 1px solid var(--border);
-+  border-radius: 0.8rem;
-+  padding: 1rem;
-+}
-+
-+.menu-card h4 {
-+  margin-top: 0;
-+  margin-bottom: 0.8rem;
-+}
-+
-+.menu-card ul {
-+  list-style: none;
-+  padding: 0;
-+  margin: 0;
-+}
-+
-+.menu-card li {
-+  display: flex;
-+  justify-content: space-between;
-+  gap: 1rem;
-+  padding: 0.45rem 0;
-+  border-bottom: 1px dashed #e5dbd2;
-+}
-+
-+.menu-card li:last-child {
-+  border-bottom: 0;
-+}
-+
-+.contact {
-+  margin-bottom: 4rem;
-+}
-+
-+@media (max-width: 640px) {
-+  .hero {
-+    min-height: 62vh;
-+  }
-+
-+  .top-nav {
-+    flex-direction: column;
-+    align-items: flex-start;
-+  }
-+}
- 
-EOF
-)
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portofino Luxembourg | Italian Restaurant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero" id="home">
+      <nav class="top-nav">
+        <h1>Portofino</h1>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="hero-content">
+        <p class="tag">Authentic Italian Cuisine · Luxembourg</p>
+        <h2>Fresh pasta, wood-fired flavors, and warm hospitality.</h2>
+        <a class="button" href="#contact">Reserve a table</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="section about" id="about">
+        <h3>About us</h3>
+        <p>
+          Portofino brings the heart of Italy to Luxembourg with seasonal ingredients,
+          handcrafted pasta, and classic Mediterranean dishes prepared daily.
+        </p>
+      </section>
+
+      <section class="section menu" id="menu">
+        <h3>Popular menu</h3>
+        <p class="menu-note">A sample of guest favorites.</p>
+
+        <div class="menu-grid">
+          <article class="menu-card">
+            <h4>Starters</h4>
+            <ul>
+              <li><span>Burrata & Tomatoes</span><span>€15</span></li>
+              <li><span>Bruschetta Trio</span><span>€13</span></li>
+              <li><span>Calamari Fritti</span><span>€16</span></li>
+            </ul>
+          </article>
+
+          <article class="menu-card">
+            <h4>Pasta</h4>
+            <ul>
+              <li><span>Tagliatelle al Tartufo</span><span>€24</span></li>
+              <li><span>Spaghetti Carbonara</span><span>€22</span></li>
+              <li><span>Lasagna della Casa</span><span>€23</span></li>
+            </ul>
+          </article>
+
+          <article class="menu-card">
+            <h4>Main courses</h4>
+            <ul>
+              <li><span>Branzino al Forno</span><span>€30</span></li>
+              <li><span>Veal Milanese</span><span>€32</span></li>
+              <li><span>Pollo al Limone</span><span>€26</span></li>
+            </ul>
+          </article>
+
+          <article class="menu-card">
+            <h4>Desserts</h4>
+            <ul>
+              <li><span>Tiramisu</span><span>€11</span></li>
+              <li><span>Panna Cotta</span><span>€10</span></li>
+              <li><span>Affogato</span><span>€9</span></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <h3>Contact</h3>
+        <p>📍 12 Rue de la Cuisine, Luxembourg</p>
+        <p>📞 +352 27 00 45 89</p>
+        <p>🕒 Tue–Sun: 12:00–22:30</p>
+      </section>
+    </main>
+  </body>
+</html>
