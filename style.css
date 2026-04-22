@@ -1,0 +1,172 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/styles.css b/styles.css
+new file mode 100644
+index 0000000000000000000000000000000000000000..2a1fa76aab5403c39375474292f72243927193b9
+--- /dev/null
++++ b/styles.css
+@@ -0,0 +1,162 @@
++:root {
++  --bg: #f5f0ea;
++  --card: #ffffff;
++  --text: #2a2420;
++  --muted: #6d6259;
++  --accent: #a31621;
++  --accent-dark: #7d121a;
++  --border: #e7ddd3;
++}
++
++* {
++  box-sizing: border-box;
++}
++
++body {
++  margin: 0;
++  font-family: "Inter", Arial, sans-serif;
++  color: var(--text);
++  background: var(--bg);
++  line-height: 1.6;
++}
++
++.hero {
++  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.5)),
++    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80")
++      center/cover no-repeat;
++  color: #fff;
++  min-height: 70vh;
++  padding: 1.2rem clamp(1rem, 4vw, 3rem) 4rem;
++  display: flex;
++  flex-direction: column;
++}
++
++.top-nav {
++  display: flex;
++  justify-content: space-between;
++  align-items: center;
++  flex-wrap: wrap;
++  gap: 0.75rem;
++}
++
++.top-nav h1 {
++  font-family: "Playfair Display", Georgia, serif;
++  font-size: clamp(1.8rem, 3vw, 2.4rem);
++  margin: 0;
++}
++
++.top-nav ul {
++  list-style: none;
++  display: flex;
++  gap: 1rem;
++  margin: 0;
++  padding: 0;
++}
++
++.top-nav a {
++  color: #fff;
++  text-decoration: none;
++  font-weight: 500;
++}
++
++.hero-content {
++  margin-top: auto;
++  max-width: 42rem;
++}
++
++.tag {
++  text-transform: uppercase;
++  letter-spacing: 0.08em;
++  font-size: 0.84rem;
++  opacity: 0.9;
++}
++
++.hero h2 {
++  font-family: "Playfair Display", Georgia, serif;
++  font-size: clamp(2rem, 5vw, 3.4rem);
++  line-height: 1.15;
++  margin: 0.5rem 0 1.4rem;
++}
++
++.button {
++  display: inline-block;
++  background: var(--accent);
++  color: #fff;
++  padding: 0.75rem 1.2rem;
++  border-radius: 0.45rem;
++  text-decoration: none;
++  font-weight: 600;
++}
++
++.button:hover {
++  background: var(--accent-dark);
++}
++
++.section {
++  width: min(1100px, 92%);
++  margin: 2.5rem auto;
++}
++
++h3 {
++  font-family: "Playfair Display", Georgia, serif;
++  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
++  margin-bottom: 0.6rem;
++}
++
++.about p,
++.contact p,
++.menu-note {
++  color: var(--muted);
++}
++
++.menu-grid {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
++  gap: 1rem;
++  margin-top: 1.2rem;
++}
++
++.menu-card {
++  background: var(--card);
++  border: 1px solid var(--border);
++  border-radius: 0.8rem;
++  padding: 1rem;
++}
++
++.menu-card h4 {
++  margin-top: 0;
++  margin-bottom: 0.8rem;
++}
++
++.menu-card ul {
++  list-style: none;
++  padding: 0;
++  margin: 0;
++}
++
++.menu-card li {
++  display: flex;
++  justify-content: space-between;
++  gap: 1rem;
++  padding: 0.45rem 0;
++  border-bottom: 1px dashed #e5dbd2;
++}
++
++.menu-card li:last-child {
++  border-bottom: 0;
++}
++
++.contact {
++  margin-bottom: 4rem;
++}
++
++@media (max-width: 640px) {
++  .hero {
++    min-height: 62vh;
++  }
++
++  .top-nav {
++    flex-direction: column;
++    align-items: flex-start;
++  }
++}
+ 
+EOF
+)
