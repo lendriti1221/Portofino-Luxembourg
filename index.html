@@ -6,88 +6,828 @@
     <title>Portofino Luxembourg | Italian Restaurant</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f7f2eb;
+        --card: #ffffff;
+        --text: #1e1912;
+        --muted: #7a6e63;
+        --accent: #9b1821;
+        --accent-dark: #720f17;
+        --gold: #c8973a;
+        --border: #e8ddd0;
+        --cream: #f0e8dc;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        font-family: 'Jost', sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        line-height: 1.65;
+      }
+
+      /* ── LANGUAGE SWITCHER ── */
+      .lang-bar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 200;
+        background: rgba(30,25,18,0.96);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0.4rem clamp(1rem,4vw,3rem);
+        gap: 0.1rem;
+        backdrop-filter: blur(4px);
+      }
+      .lang-btn {
+        background: none;
+        border: 1px solid transparent;
+        color: rgba(255,255,255,0.55);
+        font-family: 'Jost', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.7rem;
+        border-radius: 2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .lang-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+      .lang-btn.active { color: var(--gold); border-color: var(--gold); }
+
+      /* ── HERO ── */
+      .hero {
+        background:
+          linear-gradient(170deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.6) 100%),
+          url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+        color: #fff;
+        min-height: 100vh;
+        padding: 3.5rem clamp(1rem,4vw,3rem) 5rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .top-nav .logo {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+      }
+      .top-nav h1 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: clamp(2rem, 3.5vw, 2.9rem);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+      }
+      .logo-sub {
+        font-size: 0.7rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 300;
+      }
+      .top-nav ul {
+        list-style: none;
+        display: flex;
+        gap: 0.25rem;
+      }
+      .top-nav a {
+        color: rgba(255,255,255,0.82);
+        text-decoration: none;
+        font-weight: 400;
+        font-size: 0.88rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.4rem 0.85rem;
+        border-radius: 2rem;
+        transition: all 0.2s;
+      }
+      .top-nav a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+      .hero-content {
+        margin-top: auto;
+        max-width: 50rem;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 400;
+        margin-bottom: 1.2rem;
+      }
+      .tag::before {
+        content: '';
+        display: inline-block;
+        width: 2.5rem;
+        height: 1px;
+        background: var(--gold);
+      }
+      .hero h2 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: clamp(2.8rem, 6vw, 5rem);
+        font-weight: 600;
+        line-height: 1.08;
+        margin-bottom: 1.8rem;
+        font-style: italic;
+      }
+      .hero-cta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .button {
+        display: inline-block;
+        background: var(--accent);
+        color: #fff;
+        padding: 0.85rem 2rem;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: background 0.2s, transform 0.15s;
+        cursor: pointer;
+      }
+      .button:hover { background: var(--accent-dark); transform: translateY(-1px); }
+      .button-ghost {
+        display: inline-block;
+        border: 1px solid rgba(255,255,255,0.5);
+        color: rgba(255,255,255,0.9);
+        padding: 0.85rem 2rem;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        font-weight: 400;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: all 0.2s;
+      }
+      .button-ghost:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.08); }
+
+      /* ── DIVIDER ── */
+      .ornament {
+        text-align: center;
+        color: var(--gold);
+        font-size: 1.2rem;
+        letter-spacing: 0.4em;
+        margin: 0 auto 2.5rem;
+        opacity: 0.7;
+      }
+
+      /* ── SECTIONS ── */
+      .section {
+        width: min(1100px, 92%);
+        margin: 0 auto;
+        padding: 4.5rem 0;
+      }
+      .section-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 500;
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+      .section-label::after {
+        content: '';
+        flex: 0 0 2rem;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.6;
+      }
+      h3 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: clamp(2rem, 3.5vw, 3rem);
+        font-weight: 600;
+        margin-bottom: 1rem;
+        line-height: 1.1;
+      }
+
+      /* ── ABOUT ── */
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        margin-top: 1rem;
+      }
+      .about-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
+      .about-text p + p { margin-top: 1rem; }
+      .about-img {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        aspect-ratio: 4/3;
+      }
+      .about-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .about-stats {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+      }
+      .stat-num {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.4rem;
+        font-weight: 600;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+
+      /* ── MENU ── */
+      .menu-section { background: var(--cream); }
+      .menu-inner {
+        width: min(1100px, 92%);
+        margin: 0 auto;
+        padding: 4.5rem 0;
+      }
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 1.2rem;
+        margin-top: 2rem;
+      }
+      .menu-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.6rem;
+        padding: 1.5rem;
+        transition: box-shadow 0.2s, transform 0.2s;
+      }
+      .menu-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.09); transform: translateY(-2px); }
+      .menu-card h4 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+      }
+      .menu-card ul { list-style: none; }
+      .menu-card li {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.5rem 0;
+        font-size: 0.92rem;
+        border-bottom: 1px dashed #ede4d8;
+        color: var(--muted);
+      }
+      .menu-card li:last-child { border-bottom: none; }
+      .menu-card li span:last-child {
+        font-weight: 600;
+        color: var(--accent);
+        white-space: nowrap;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1rem;
+      }
+
+      /* ── RESERVATION ── */
+      .reservation-wrap {
+        background: var(--text);
+        color: #fff;
+      }
+      .reservation-inner {
+        width: min(1100px, 92%);
+        margin: 0 auto;
+        padding: 5rem 0;
+        display: grid;
+        grid-template-columns: 1fr 1.6fr;
+        gap: 5rem;
+        align-items: start;
+      }
+      .res-info h3 { color: #fff; }
+      .res-info p { color: rgba(255,255,255,0.6); margin-top: 0.8rem; font-size: 0.95rem; line-height: 1.8; }
+      .res-detail {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .res-detail-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        font-size: 0.88rem;
+        color: rgba(255,255,255,0.7);
+      }
+      .res-detail-item .icon { color: var(--gold); font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+      /* Form */
+      .res-form { display: flex; flex-direction: column; gap: 1rem; }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+      .form-group label {
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+        font-weight: 500;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 0.3rem;
+        color: #fff;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.92rem;
+        padding: 0.75rem 1rem;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+        width: 100%;
+      }
+      .form-group input::placeholder,
+      .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+      .form-group select option { background: #2a2420; color: #fff; }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--gold);
+        background: rgba(255,255,255,0.09);
+      }
+      .form-group textarea { resize: vertical; min-height: 90px; }
+      .submit-btn {
+        background: var(--accent);
+        border: none;
+        border-radius: 0.3rem;
+        color: #fff;
+        font-family: 'Jost', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.9rem 2rem;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+        align-self: flex-start;
+        margin-top: 0.5rem;
+      }
+      .submit-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+      /* Success message */
+      .form-success {
+        display: none;
+        background: rgba(200,151,58,0.12);
+        border: 1px solid var(--gold);
+        border-radius: 0.4rem;
+        padding: 1.2rem 1.4rem;
+        color: var(--gold);
+        font-size: 0.93rem;
+        line-height: 1.6;
+        margin-top: 0.5rem;
+      }
+      .form-success.visible { display: block; }
+
+      /* ── CONTACT ── */
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+      .contact-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.6rem;
+        padding: 1.6rem;
+      }
+      .contact-card .ci { font-size: 1.5rem; margin-bottom: 0.7rem; }
+      .contact-card h5 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+      .contact-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+      /* ── FOOTER ── */
+      footer {
+        background: var(--text);
+        color: rgba(255,255,255,0.45);
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+      }
+      footer span { color: var(--gold); }
+
+      /* ── SEPARATOR ── */
+      .sep {
+        border: none;
+        border-top: 1px solid var(--border);
+        width: min(1100px, 92%);
+        margin: 0 auto;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 860px) {
+        .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+        .about-img { aspect-ratio: 16/7; }
+        .reservation-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+        .contact-grid { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 600px) {
+        .top-nav { flex-direction: column; align-items: flex-start; }
+        .form-row { grid-template-columns: 1fr; }
+        .contact-grid { grid-template-columns: 1fr; }
+        .about-stats { flex-wrap: wrap; gap: 1.4rem; }
+      }
+    </style>
   </head>
   <body>
+
+    <!-- Language Bar -->
+    <div class="lang-bar">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('de')">DE</button>
+    </div>
+
+    <!-- HERO -->
     <header class="hero" id="home">
       <nav class="top-nav">
-        <h1>Portofino</h1>
+        <div class="logo">
+          <h1>Portofino</h1>
+          <span class="logo-sub">Luxembourg</span>
+        </div>
         <ul>
-          <li><a href="#about">About</a></li>
-          <li><a href="#menu">Menu</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#about" data-i18n="nav_about">About</a></li>
+          <li><a href="#menu" data-i18n="nav_menu">Menu</a></li>
+          <li><a href="#reservations" data-i18n="nav_reserve">Reservations</a></li>
+          <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
         </ul>
       </nav>
-
       <div class="hero-content">
-        <p class="tag">Authentic Italian Cuisine · Luxembourg</p>
-        <h2>Fresh pasta, wood-fired flavors, and warm hospitality.</h2>
-        <a class="button" href="#contact">Reserve a table</a>
+        <p class="tag" data-i18n="hero_tag">Authentic Italian Cuisine · Luxembourg</p>
+        <h2 data-i18n="hero_heading">Fresh pasta,<br>wood-fired flavors.</h2>
+        <div class="hero-cta">
+          <a class="button" href="#reservations" data-i18n="hero_cta1">Reserve a table</a>
+          <a class="button-ghost" href="#menu" data-i18n="hero_cta2">View menu</a>
+        </div>
       </div>
     </header>
 
     <main>
-      <section class="section about" id="about">
-        <h3>About us</h3>
-        <p>
-          Portofino brings the heart of Italy to Luxembourg with seasonal ingredients,
-          handcrafted pasta, and classic Mediterranean dishes prepared daily.
-        </p>
-      </section>
-
-      <section class="section menu" id="menu">
-        <h3>Popular menu</h3>
-        <p class="menu-note">A sample of guest favorites.</p>
-
-        <div class="menu-grid">
-          <article class="menu-card">
-            <h4>Starters</h4>
-            <ul>
-              <li><span>Burrata & Tomatoes</span><span>€15</span></li>
-              <li><span>Bruschetta Trio</span><span>€13</span></li>
-              <li><span>Calamari Fritti</span><span>€16</span></li>
-            </ul>
-          </article>
-
-          <article class="menu-card">
-            <h4>Pasta</h4>
-            <ul>
-              <li><span>Tagliatelle al Tartufo</span><span>€24</span></li>
-              <li><span>Spaghetti Carbonara</span><span>€22</span></li>
-              <li><span>Lasagna della Casa</span><span>€23</span></li>
-            </ul>
-          </article>
-
-          <article class="menu-card">
-            <h4>Main courses</h4>
-            <ul>
-              <li><span>Branzino al Forno</span><span>€30</span></li>
-              <li><span>Veal Milanese</span><span>€32</span></li>
-              <li><span>Pollo al Limone</span><span>€26</span></li>
-            </ul>
-          </article>
-
-          <article class="menu-card">
-            <h4>Desserts</h4>
-            <ul>
-              <li><span>Tiramisu</span><span>€11</span></li>
-              <li><span>Panna Cotta</span><span>€10</span></li>
-              <li><span>Affogato</span><span>€9</span></li>
-            </ul>
-          </article>
+      <!-- ABOUT -->
+      <section class="section" id="about">
+        <p class="section-label" data-i18n="about_label">Our story</p>
+        <div class="about-grid">
+          <div class="about-text">
+            <h3 data-i18n="about_heading">A taste of Italy in the heart of Luxembourg</h3>
+            <p data-i18n="about_p1">Portofino brings the soul of the Italian Riviera to Luxembourg City. Every dish is crafted from seasonal ingredients: handmade pasta rolled fresh each morning, wood-fired focaccia, and classic Mediterranean mains prepared with care.</p>
+            <p data-i18n="about_p2">Whether you're joining us for a quiet weekday lunch or a festive dinner with family, our team welcomes you with the warmth and generosity that define Italian hospitality.</p>
+            <div class="about-stats">
+              <div>
+                <div class="stat-num">12+</div>
+                <div class="stat-label" data-i18n="stat_years">Years open</div>
+              </div>
+              <div>
+                <div class="stat-num">100%</div>
+                <div class="stat-label" data-i18n="stat_fresh">Fresh pasta daily</div>
+              </div>
+              <div>
+                <div class="stat-num">40+</div>
+                <div class="stat-label" data-i18n="stat_wines">Italian wines</div>
+              </div>
+            </div>
+          </div>
+          <div class="about-img">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80" alt="Restaurant interior" />
+          </div>
         </div>
       </section>
 
-      <section class="section contact" id="contact">
-        <h3>Contact</h3>
-        <p>📍 12 Rue de la Cuisine, Luxembourg</p>
-        <p>📞 +352 27 00 45 89</p>
-        <p>🕒 Tue–Sun: 12:00–22:30</p>
+      <hr class="sep" />
+
+      <!-- MENU -->
+      <section class="menu-section" id="menu">
+        <div class="menu-inner">
+          <p class="section-label" data-i18n="menu_label">Our kitchen</p>
+          <h3 data-i18n="menu_heading">Popular menu</h3>
+          <p style="color:var(--muted);font-size:0.93rem;" data-i18n="menu_note">A curated selection of guest favourites. Full menu available in-house.</p>
+          <div class="menu-grid">
+            <article class="menu-card">
+              <h4 data-i18n="menu_starters">Starters</h4>
+              <ul>
+                <li><span>Burrata & Tomatoes</span><span>€15</span></li>
+                <li><span>Bruschetta Trio</span><span>€13</span></li>
+                <li><span>Calamari Fritti</span><span>€16</span></li>
+              </ul>
+            </article>
+            <article class="menu-card">
+              <h4 data-i18n="menu_pasta">Pasta</h4>
+              <ul>
+                <li><span>Tagliatelle al Tartufo</span><span>€24</span></li>
+                <li><span>Spaghetti Carbonara</span><span>€22</span></li>
+                <li><span>Lasagna della Casa</span><span>€23</span></li>
+              </ul>
+            </article>
+            <article class="menu-card">
+              <h4 data-i18n="menu_mains">Main courses</h4>
+              <ul>
+                <li><span>Branzino al Forno</span><span>€30</span></li>
+                <li><span>Veal Milanese</span><span>€32</span></li>
+                <li><span>Pollo al Limone</span><span>€26</span></li>
+              </ul>
+            </article>
+            <article class="menu-card">
+              <h4 data-i18n="menu_desserts">Desserts</h4>
+              <ul>
+                <li><span>Tiramisu</span><span>€11</span></li>
+                <li><span>Panna Cotta</span><span>€10</span></li>
+                <li><span>Affogato</span><span>€9</span></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESERVATION -->
+      <section class="reservation-wrap" id="reservations">
+        <div class="reservation-inner">
+          <div class="res-info">
+            <p class="section-label" style="color:rgba(200,151,58,0.8);" data-i18n="res_label">Book a table</p>
+            <h3 data-i18n="res_heading">Reserve your evening</h3>
+            <p data-i18n="res_desc">We look forward to welcoming you. Reservations are recommended, especially on weekends. For groups of 8 or more, please call us directly.</p>
+            <div class="res-detail">
+              <div class="res-detail-item"><span class="icon">📍</span><span>12 Rue de la Cuisine, Luxembourg</span></div>
+              <div class="res-detail-item"><span class="icon">📞</span><span>+352 27 00 45 89</span></div>
+              <div class="res-detail-item"><span class="icon">🕒</span><span data-i18n="hours_text">Tue–Sun: 12:00 – 15:00 &amp; 18:30 – 22:30</span></div>
+              <div class="res-detail-item"><span class="icon">✉️</span><span>reservations@portofino.lu</span></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="res-form" id="reservationForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label data-i18n="form_first">First name</label>
+                  <input type="text" id="firstName" data-i18n-placeholder="ph_first" placeholder="Marco" />
+                </div>
+                <div class="form-group">
+                  <label data-i18n="form_last">Last name</label>
+                  <input type="text" id="lastName" data-i18n-placeholder="ph_last" placeholder="Rossi" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label data-i18n="form_email">Email</label>
+                  <input type="email" id="email" placeholder="marco@example.com" />
+                </div>
+                <div class="form-group">
+                  <label data-i18n="form_phone">Phone</label>
+                  <input type="tel" id="phone" placeholder="+352 ..." />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label data-i18n="form_date">Date</label>
+                  <input type="date" id="date" />
+                </div>
+                <div class="form-group">
+                  <label data-i18n="form_time">Time</label>
+                  <select id="time">
+                    <option value="">-- select --</option>
+                    <option>12:00</option><option>12:30</option><option>13:00</option>
+                    <option>13:30</option><option>14:00</option><option>14:30</option>
+                    <option>18:30</option><option>19:00</option><option>19:30</option>
+                    <option>20:00</option><option>20:30</option><option>21:00</option>
+                    <option>21:30</option><option>22:00</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label data-i18n="form_guests">Number of guests</label>
+                <select id="guests">
+                  <option value="">-- select --</option>
+                  <option>1</option><option>2</option><option>3</option>
+                  <option>4</option><option>5</option><option>6</option>
+                  <option>7</option><option data-i18n="guests_more">8+ (please call)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label data-i18n="form_notes">Special requests (optional)</label>
+                <textarea id="notes" data-i18n-placeholder="ph_notes" placeholder="Allergies, anniversary, high chair…"></textarea>
+              </div>
+              <div>
+                <button class="submit-btn" onclick="submitReservation()" data-i18n="form_submit">Confirm reservation</button>
+              </div>
+              <div class="form-success" id="formSuccess">
+                <span data-i18n="form_success">✓ Thank you! Your reservation request has been received. We will confirm by email within 2 hours.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="section" id="contact">
+        <p class="section-label" data-i18n="contact_label">Find us</p>
+        <h3 data-i18n="contact_heading">Contact & Hours</h3>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="ci">📍</div>
+            <h5 data-i18n="contact_address_title">Address</h5>
+            <p>12 Rue de la Cuisine<br>Luxembourg-Ville, L-1234<br>Luxembourg</p>
+          </div>
+          <div class="contact-card">
+            <div class="ci">🕒</div>
+            <h5 data-i18n="contact_hours_title">Opening hours</h5>
+            <p data-i18n="contact_hours_body">Tue – Sun: 12:00–15:00<br>Tue – Sun: 18:30–22:30<br>Closed Mondays</p>
+          </div>
+          <div class="contact-card">
+            <div class="ci">📞</div>
+            <h5 data-i18n="contact_reach_title">Reach us</h5>
+            <p>+352 27 00 45 89<br>reservations@portofino.lu</p>
+          </div>
+        </div>
       </section>
     </main>
+
+    <footer>
+      © 2025 <span>Portofino Luxembourg</span> · Authentic Italian Cuisine · All rights reserved
+    </footer>
+
+    <script>
+      // ── TRANSLATIONS ──
+      const i18n = {
+        en: {
+          nav_about: "About", nav_menu: "Menu", nav_reserve: "Reservations", nav_contact: "Contact",
+          hero_tag: "Authentic Italian Cuisine · Luxembourg",
+          hero_heading: "Fresh pasta,\nwood-fired flavors.",
+          hero_cta1: "Reserve a table", hero_cta2: "View menu",
+          about_label: "Our story",
+          about_heading: "A taste of Italy in the heart of Luxembourg",
+          about_p1: "Portofino brings the soul of the Italian Riviera to Luxembourg City. Every dish is crafted from seasonal ingredients: handmade pasta rolled fresh each morning, wood-fired focaccia, and classic Mediterranean mains prepared with care.",
+          about_p2: "Whether you're joining us for a quiet weekday lunch or a festive dinner with family, our team welcomes you with the warmth and generosity that define Italian hospitality.",
+          stat_years: "Years open", stat_fresh: "Fresh pasta daily", stat_wines: "Italian wines",
+          menu_label: "Our kitchen", menu_heading: "Popular menu",
+          menu_note: "A curated selection of guest favourites. Full menu available in-house.",
+          menu_starters: "Starters", menu_pasta: "Pasta", menu_mains: "Main courses", menu_desserts: "Desserts",
+          res_label: "Book a table", res_heading: "Reserve your evening",
+          res_desc: "We look forward to welcoming you. Reservations are recommended, especially on weekends. For groups of 8 or more, please call us directly.",
+          hours_text: "Tue–Sun: 12:00 – 15:00 & 18:30 – 22:30",
+          form_first: "First name", form_last: "Last name", form_email: "Email", form_phone: "Phone",
+          form_date: "Date", form_time: "Time", form_guests: "Number of guests",
+          form_notes: "Special requests (optional)", form_submit: "Confirm reservation",
+          ph_first: "Marco", ph_last: "Rossi", ph_notes: "Allergies, anniversary, high chair…",
+          guests_more: "8+ (please call)",
+          form_success: "✓ Thank you! Your reservation request has been received. We will confirm by email within 2 hours.",
+          contact_label: "Find us", contact_heading: "Contact & Hours",
+          contact_address_title: "Address", contact_hours_title: "Opening hours",
+          contact_hours_body: "Tue – Sun: 12:00–15:00\nTue – Sun: 18:30–22:30\nClosed Mondays",
+          contact_reach_title: "Reach us",
+        },
+        fr: {
+          nav_about: "À propos", nav_menu: "Menu", nav_reserve: "Réservations", nav_contact: "Contact",
+          hero_tag: "Cuisine italienne authentique · Luxembourg",
+          hero_heading: "Pâtes fraîches,\nsaveurs au feu de bois.",
+          hero_cta1: "Réserver une table", hero_cta2: "Voir le menu",
+          about_label: "Notre histoire",
+          about_heading: "Un goût d'Italie au cœur du Luxembourg",
+          about_p1: "Portofino vous transporte sur la Riviera italienne au cœur de la ville de Luxembourg. Chaque plat est préparé à partir d'ingrédients de saison : pâtes maison fraîches chaque matin, focaccia au feu de bois et plats méditerranéens traditionnels préparés avec soin.",
+          about_p2: "Que vous veniez pour un déjeuner tranquille en semaine ou un dîner festif en famille, notre équipe vous accueille avec la chaleur et la générosité de l'hospitalité italienne.",
+          stat_years: "Années d'ouverture", stat_fresh: "Pâtes fraîches / jour", stat_wines: "Vins italiens",
+          menu_label: "Notre cuisine", menu_heading: "Menu populaire",
+          menu_note: "Une sélection de plats favoris. Menu complet disponible sur place.",
+          menu_starters: "Entrées", menu_pasta: "Pâtes", menu_mains: "Plats principaux", menu_desserts: "Desserts",
+          res_label: "Réserver", res_heading: "Réservez votre soirée",
+          res_desc: "Nous avons hâte de vous accueillir. Les réservations sont recommandées, surtout le week-end. Pour les groupes de 8 personnes ou plus, veuillez nous appeler directement.",
+          hours_text: "Mar–Dim : 12h00–15h00 & 18h30–22h30",
+          form_first: "Prénom", form_last: "Nom", form_email: "E-mail", form_phone: "Téléphone",
+          form_date: "Date", form_time: "Heure", form_guests: "Nombre de convives",
+          form_notes: "Demandes spéciales (optionnel)", form_submit: "Confirmer la réservation",
+          ph_first: "Jean", ph_last: "Dupont", ph_notes: "Allergies, anniversaire, chaise haute…",
+          guests_more: "8+ (veuillez appeler)",
+          form_success: "✓ Merci ! Votre demande de réservation a bien été reçue. Nous vous confirmerons par e-mail dans les 2 heures.",
+          contact_label: "Nous trouver", contact_heading: "Contact & Horaires",
+          contact_address_title: "Adresse", contact_hours_title: "Horaires d'ouverture",
+          contact_hours_body: "Mar – Dim : 12h00–15h00\nMar – Dim : 18h30–22h30\nFermé le lundi",
+          contact_reach_title: "Nous contacter",
+        },
+        de: {
+          nav_about: "Über uns", nav_menu: "Speisekarte", nav_reserve: "Reservierungen", nav_contact: "Kontakt",
+          hero_tag: "Authentische italienische Küche · Luxemburg",
+          hero_heading: "Frische Pasta,\nholzbefeuerte Aromen.",
+          hero_cta1: "Tisch reservieren", hero_cta2: "Speisekarte ansehen",
+          about_label: "Unsere Geschichte",
+          about_heading: "Ein Hauch von Italien im Herzen Luxemburgs",
+          about_p1: "Portofino bringt die Seele der italienischen Riviera nach Luxemburg-Stadt. Jedes Gericht wird aus saisonalen Zutaten zubereitet: frisch gerollte handgemachte Pasta jeden Morgen, holzgefeuerte Focaccia und klassische Mittelmeerspeisen mit Sorgfalt zubereitet.",
+          about_p2: "Ob Sie zu einem ruhigen Mittagessen unter der Woche oder einem festlichen Abendessen mit der Familie kommen – unser Team empfängt Sie mit der Wärme und Großzügigkeit, die für italienische Gastfreundschaft stehen.",
+          stat_years: "Jahre geöffnet", stat_fresh: "Frische Pasta täglich", stat_wines: "Ital. Weine",
+          menu_label: "Unsere Küche", menu_heading: "Beliebte Gerichte",
+          menu_note: "Eine Auswahl der Gästelieblinge. Die vollständige Speisekarte ist im Restaurant erhältlich.",
+          menu_starters: "Vorspeisen", menu_pasta: "Pasta", menu_mains: "Hauptgerichte", menu_desserts: "Desserts",
+          res_label: "Reservierung", res_heading: "Reservieren Sie Ihren Abend",
+          res_desc: "Wir freuen uns darauf, Sie zu begrüßen. Reservierungen werden empfohlen, besonders am Wochenende. Für Gruppen ab 8 Personen rufen Sie uns bitte direkt an.",
+          hours_text: "Di–So: 12:00–15:00 & 18:30–22:30 Uhr",
+          form_first: "Vorname", form_last: "Nachname", form_email: "E-Mail", form_phone: "Telefon",
+          form_date: "Datum", form_time: "Uhrzeit", form_guests: "Anzahl der Gäste",
+          form_notes: "Besondere Wünsche (optional)", form_submit: "Reservierung bestätigen",
+          ph_first: "Hans", ph_last: "Müller", ph_notes: "Allergien, Jahrestag, Kinderstuhl…",
+          guests_more: "8+ (bitte anrufen)",
+          form_success: "✓ Vielen Dank! Ihre Reservierungsanfrage ist eingegangen. Wir bestätigen per E-Mail innerhalb von 2 Stunden.",
+          contact_label: "Uns finden", contact_heading: "Kontakt & Öffnungszeiten",
+          contact_address_title: "Adresse", contact_hours_title: "Öffnungszeiten",
+          contact_hours_body: "Di – So: 12:00–15:00 Uhr\nDi – So: 18:30–22:30 Uhr\nMontags geschlossen",
+          contact_reach_title: "Kontakt",
+        }
+      };
+
+      let currentLang = 'en';
+
+      function setLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+
+        const t = i18n[lang];
+
+        // Text nodes
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (t[key] !== undefined) {
+            // preserve line breaks for hero heading
+            if (key === 'hero_heading') {
+              el.innerHTML = t[key].replace(/\n/g, '<br>');
+            } else if (key === 'contact_hours_body') {
+              el.innerHTML = t[key].replace(/\n/g, '<br>');
+            } else {
+              el.textContent = t[key];
+            }
+          }
+        });
+
+        // Placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+          const key = el.getAttribute('data-i18n-placeholder');
+          if (t[key]) el.setAttribute('placeholder', t[key]);
+        });
+
+        // Update html lang
+        document.documentElement.lang = lang;
+      }
+
+      // ── DATE MIN ──
+      const dateInput = document.getElementById('date');
+      const today = new Date();
+      today.setDate(today.getDate() + 1);
+      dateInput.min = today.toISOString().split('T')[0];
+
+      // ── FORM SUBMIT ──
+      function submitReservation() {
+        const t = i18n[currentLang];
+        const fields = {
+          firstName: document.getElementById('firstName').value.trim(),
+          lastName:  document.getElementById('lastName').value.trim(),
+          email:     document.getElementById('email').value.trim(),
+          date:      document.getElementById('date').value,
+          time:      document.getElementById('time').value,
+          guests:    document.getElementById('guests').value,
+        };
+
+        const missing = Object.values(fields).some(v => !v);
+        if (missing) {
+          const msg = { en: 'Please fill in all required fields.', fr: 'Veuillez remplir tous les champs obligatoires.', de: 'Bitte alle Pflichtfelder ausfüllen.' };
+          alert(msg[currentLang]);
+          return;
+        }
+
+        // Simulate success
+        const btn = document.querySelector('.submit-btn');
+        btn.disabled = true;
+        btn.textContent = '...';
+        setTimeout(() => {
+          btn.style.display = 'none';
+          document.getElementById('formSuccess').classList.add('visible');
+          document.getElementById('formSuccess').querySelector('[data-i18n]').textContent = t.form_success;
+        }, 800);
+      }
+    </script>
   </body>
 </html>
