@@ -1,833 +1,1903 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portofino Luxembourg | Italian Restaurant</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <style>
-      :root {
-        --bg: #f7f2eb;
-        --card: #ffffff;
-        --text: #1e1912;
-        --muted: #7a6e63;
-        --accent: #9b1821;
-        --accent-dark: #720f17;
-        --gold: #c8973a;
-        --border: #e8ddd0;
-        --cream: #f0e8dc;
-      }
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portofino Luxembourg | Italian Restaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0b08;
+      --surface: #141009;
+      --card: #1a1410;
+      --card2: #1f1912;
+      --text: #f0e8dc;
+      --muted: #9a8e80;
+      --accent: #9b1821;
+      --accent-dark: #720f17;
+      --gold: #c8973a;
+      --gold-light: #e8b84b;
+      --gold-dim: rgba(200,151,58,0.15);
+      --border: rgba(200,151,58,0.12);
+      --border-strong: rgba(200,151,58,0.28);
+      --cream: #f0e8dc;
+    }
 
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
 
-      html { scroll-behavior: smooth; }
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(36px) rotateX(8deg); }
+      to   { opacity: 1; transform: translateY(0) rotateX(0deg); }
+    }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotateX(2deg); }
+      50%       { transform: translateY(-8px) rotateX(-2deg); }
+    }
+    @keyframes rotateLine {
+      from { transform: scaleX(0) translateZ(0); }
+      to   { transform: scaleX(1) translateZ(0); }
+    }
+    @keyframes particleDrift {
+      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
+      50%  { transform: translateY(-120px) translateX(30px) scale(0.7); opacity: 0.3; }
+      100% { transform: translateY(-240px) translateX(-10px) scale(0.4); opacity: 0; }
+    }
 
-      body {
-        font-family: 'Jost', sans-serif;
-        color: var(--text);
-        background: var(--bg);
-        line-height: 1.65;
-      }
+    /* Page veil */
+    #page-veil {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0d0b08;
+      pointer-events: none;
+      transition: opacity 0.8s ease 0.1s;
+    }
+    #page-veil.done { opacity: 0; }
 
-      /* ── LANGUAGE SWITCHER ── */
-      .lang-bar {
-        position: fixed;
-        top: 0; left: 0; right: 0;
-        z-index: 200;
-        background: rgba(30,25,18,0.96);
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 0.4rem clamp(1rem,4vw,3rem);
-        gap: 0.1rem;
-        backdrop-filter: blur(4px);
-      }
-      .lang-btn {
-        background: none;
-        border: 1px solid transparent;
-        color: rgba(255,255,255,0.55);
-        font-family: 'Jost', sans-serif;
-        font-size: 0.75rem;
-        font-weight: 500;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        padding: 0.3rem 0.7rem;
-        border-radius: 2rem;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .lang-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
-      .lang-btn.active { color: var(--gold); border-color: var(--gold); }
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0; transform: translateY(32px) rotateX(4deg);
+      transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1);
+      transform-origin: center bottom;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0) rotateX(0deg); }
 
-      /* ── HERO ── */
-      .hero {
-        background:
-          linear-gradient(170deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.6) 100%),
-          url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
-        color: #fff;
-        min-height: 100vh;
-        padding: 3.5rem clamp(1rem,4vw,3rem) 5rem;
-        display: flex;
-        flex-direction: column;
-      }
+    .reveal-left {
+      opacity: 0; transform: translateX(-40px) rotateY(-6deg);
+      transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0) rotateY(0deg); }
 
-      .top-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-      }
-      .top-nav .logo {
-        display: flex;
-        flex-direction: column;
-        line-height: 1;
-      }
-      .top-nav h1 {
-        font-family: 'Cormorant Garamond', Georgia, serif;
-        font-size: clamp(2rem, 3.5vw, 2.9rem);
-        font-weight: 600;
-        letter-spacing: 0.06em;
-      }
-      .logo-sub {
-        font-size: 0.7rem;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: var(--gold);
-        font-weight: 300;
-      }
-      .top-nav ul {
-        list-style: none;
-        display: flex;
-        gap: 0.25rem;
-      }
-      .top-nav a {
-        color: rgba(255,255,255,0.82);
-        text-decoration: none;
-        font-weight: 400;
-        font-size: 0.88rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        padding: 0.4rem 0.85rem;
-        border-radius: 2rem;
-        transition: all 0.2s;
-      }
-      .top-nav a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .reveal-right {
+      opacity: 0; transform: translateX(40px) rotateY(6deg);
+      transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1), transform 0.85s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0) rotateY(0deg); }
 
-      .hero-content {
-        margin-top: auto;
-        max-width: 50rem;
-      }
-      .tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        font-size: 0.78rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--gold);
-        font-weight: 400;
-        margin-bottom: 1.2rem;
-      }
-      .tag::before {
-        content: '';
-        display: inline-block;
-        width: 2.5rem;
-        height: 1px;
-        background: var(--gold);
-      }
-      .hero h2 {
-        font-family: 'Cormorant Garamond', Georgia, serif;
-        font-size: clamp(2.8rem, 6vw, 5rem);
-        font-weight: 600;
-        line-height: 1.08;
-        margin-bottom: 1.8rem;
-        font-style: italic;
-      }
-      .hero-cta {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      .button {
-        display: inline-block;
-        background: var(--accent);
-        color: #fff;
-        padding: 0.85rem 2rem;
-        border-radius: 0.25rem;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.85rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        transition: background 0.2s, transform 0.15s;
-        cursor: pointer;
-      }
-      .button:hover { background: var(--accent-dark); transform: translateY(-1px); }
-      .button-ghost {
-        display: inline-block;
-        border: 1px solid rgba(255,255,255,0.5);
-        color: rgba(255,255,255,0.9);
-        padding: 0.85rem 2rem;
-        border-radius: 0.25rem;
-        text-decoration: none;
-        font-weight: 400;
-        font-size: 0.85rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        transition: all 0.2s;
-      }
-      .button-ghost:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.08); }
+    .stagger-children > * {
+      opacity: 0; transform: translateY(28px) scale(0.97);
+      transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    }
+    .stagger-children.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
+    .stagger-children.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.1s; }
+    .stagger-children.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.2s; }
+    .stagger-children.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.3s; }
 
-      /* ── DIVIDER ── */
-      .ornament {
-        text-align: center;
-        color: var(--gold);
-        font-size: 1.2rem;
-        letter-spacing: 0.4em;
-        margin: 0 auto 2.5rem;
-        opacity: 0.7;
-      }
+    /* ─── BASE ─── */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+      perspective: 1400px;
+      overflow-x: hidden;
+    }
 
-      /* ── SECTIONS ── */
-      .section {
-        width: min(1100px, 92%);
-        margin: 0 auto;
-        padding: 4.5rem 0;
-      }
-      .section-label {
-        font-size: 0.72rem;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--gold);
-        font-weight: 500;
-        margin-bottom: 0.6rem;
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-      }
-      .section-label::after {
-        content: '';
-        flex: 0 0 2rem;
-        height: 1px;
-        background: var(--gold);
-        opacity: 0.6;
-      }
-      h3 {
-        font-family: 'Cormorant Garamond', Georgia, serif;
-        font-size: clamp(2rem, 3.5vw, 3rem);
-        font-weight: 600;
-        margin-bottom: 1rem;
-        line-height: 1.1;
-      }
+    /* ─── LANG BAR ─── */
+    .lang-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      background: rgba(13,11,8,0.92);
+      display: flex; justify-content: flex-end; align-items: center;
+      padding: 0.4rem clamp(1rem,4vw,3rem); gap: 0.1rem;
+      box-shadow: 0 1px 0 rgba(200,151,58,0.16), 0 8px 30px rgba(0,0,0,0.35);
+      border-bottom: 1px solid var(--border);
+    }
+    .lang-btn {
+      background: none; border: 1px solid transparent;
+      color: rgba(240,232,220,0.4);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 0.28rem 0.65rem; border-radius: 2rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover { color: var(--text); border-color: rgba(200,151,58,0.3); }
+    .lang-btn.active { color: var(--gold); border-color: var(--gold); }
 
-      /* ── ABOUT ── */
-      .about-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-        align-items: center;
-        margin-top: 1rem;
-      }
-      .about-text p { color: var(--muted); font-size: 1.05rem; line-height: 1.8; }
-      .about-text p + p { margin-top: 1rem; }
-      .about-img {
-        border-radius: 0.5rem;
-        overflow: hidden;
-        aspect-ratio: 4/3;
-      }
-      .about-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-      .about-stats {
-        display: flex;
-        gap: 2rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid var(--border);
-      }
-      .stat-num {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 2.4rem;
-        font-weight: 600;
-        color: var(--accent);
-        line-height: 1;
-      }
-      .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.2rem; }
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      background:
+        linear-gradient(160deg, rgba(13,11,8,0.7) 0%, rgba(13,11,8,0.3) 50%, rgba(13,11,8,0.75) 100%),
+        url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+      display: flex; flex-direction: column;
+      padding: 3.5rem clamp(1.5rem,5vw,4rem) 5rem;
+      transform-style: preserve-3d;
+      overflow: hidden;
+    }
 
-      /* ── MENU ── */
-      .menu-section { background: var(--cream); }
-      .menu-inner {
-        width: min(1100px, 92%);
-        margin: 0 auto;
-        padding: 4.5rem 0;
-      }
-      .menu-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 1.2rem;
-        margin-top: 2rem;
-      }
-      .menu-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 0.6rem;
-        padding: 1.5rem;
-        transition: box-shadow 0.2s, transform 0.2s;
-      }
-      .menu-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.09); transform: translateY(-2px); }
-      .menu-card h4 {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        padding-bottom: 0.6rem;
-        border-bottom: 1px solid var(--border);
-        color: var(--text);
-      }
-      .menu-card ul { list-style: none; }
-      .menu-card li {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.5rem 0;
-        font-size: 0.92rem;
-        border-bottom: 1px dashed #ede4d8;
-        color: var(--muted);
-      }
-      .menu-card li:last-child { border-bottom: none; }
-      .menu-card li span:last-child {
-        font-weight: 600;
-        color: var(--accent);
-        white-space: nowrap;
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1rem;
-      }
+    /* Grain overlay */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none; z-index: 0;
+      opacity: 0.5;
+    }
 
-      /* ── RESERVATION ── */
-      .reservation-wrap {
-        background: var(--text);
-        color: #fff;
-      }
-      .reservation-inner {
-        width: min(1100px, 92%);
-        margin: 0 auto;
-        padding: 5rem 0;
-        display: grid;
-        grid-template-columns: 1fr 1.6fr;
-        gap: 5rem;
-        align-items: start;
-      }
-      .res-info h3 { color: #fff; }
-      .res-info p { color: rgba(255,255,255,0.6); margin-top: 0.8rem; font-size: 0.95rem; line-height: 1.8; }
-      .res-detail {
-        margin-top: 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      .res-detail-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        font-size: 0.88rem;
-        color: rgba(255,255,255,0.7);
-      }
-      .res-detail-item .icon { color: var(--gold); font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+    /* Floating particles */
+    .hero-particle {
+      position: absolute; bottom: 20%; border-radius: 50%;
+      background: var(--gold); pointer-events: none;
+      animation: none;
+      opacity: 0.28 !important;
+    }
 
-      /* Form */
-      .res-form { display: flex; flex-direction: column; gap: 1rem; }
-      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-      .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-      .form-group label {
-        font-size: 0.72rem;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.5);
-        font-weight: 500;
-      }
-      .form-group input,
-      .form-group select,
-      .form-group textarea {
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.15);
-        border-radius: 0.3rem;
-        color: #fff;
-        font-family: 'Jost', sans-serif;
-        font-size: 0.92rem;
-        padding: 0.75rem 1rem;
-        outline: none;
-        transition: border-color 0.2s, background 0.2s;
-        width: 100%;
-      }
-      .form-group input::placeholder,
-      .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
-      .form-group select option { background: #2a2420; color: #fff; }
-      .form-group input:focus,
-      .form-group select:focus,
-      .form-group textarea:focus {
-        border-color: var(--gold);
-        background: rgba(255,255,255,0.09);
-      }
-      .form-group textarea { resize: vertical; min-height: 90px; }
-      .submit-btn {
-        background: var(--accent);
-        border: none;
-        border-radius: 0.3rem;
-        color: #fff;
-        font-family: 'Jost', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 600;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        padding: 0.9rem 2rem;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.15s;
-        align-self: flex-start;
-        margin-top: 0.5rem;
-      }
-      .submit-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    /* ─── TOP NAV ─── */
+    .top-nav {
+      position: relative; z-index: 2;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+      opacity: 0; animation: fadeIn 0.7s ease 0.2s forwards;
+    }
+    .logo { display: flex; flex-direction: column; line-height: 1.15; padding-top: 0.4rem; }
+    .top-nav h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2rem,3.5vw,3rem); font-weight: 300;
+      letter-spacing: 0.12em; color: var(--text);
+      text-shadow:
+        0 0 60px rgba(200,151,58,0.25),
+        2px 3px 0 rgba(0,0,0,0.5),
+        4px 6px 12px rgba(0,0,0,0.4);
+    }
+    .logo-sub {
+      font-size: 0.62rem; letter-spacing: 0.32em;
+      text-transform: uppercase; color: var(--gold);
+      font-weight: 400; margin-top: 0.2rem;
+    }
 
-      /* Success message */
-      .form-success {
-        display: none;
-        background: rgba(200,151,58,0.12);
-        border: 1px solid var(--gold);
-        border-radius: 0.4rem;
-        padding: 1.2rem 1.4rem;
-        color: var(--gold);
-        font-size: 0.93rem;
-        line-height: 1.6;
-        margin-top: 0.5rem;
-      }
-      .form-success.visible { display: block; }
+    /* ─── NAV LINKS — REDESIGNED ─── */
+    .top-nav ul {
+      list-style: none; display: flex;
+      background: rgba(13,11,8,0.5);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.85);
+      border: 1px solid var(--border-strong);
+      border-radius: 3rem;
+      padding: 0.35rem 0.35rem;
+      gap: 0.1rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(200,151,58,0.08);
+    }
+    .top-nav a {
+      display: block;
+      color: rgba(240,232,220,0.7);
+      text-decoration: none; font-weight: 500;
+      font-size: 0.72rem; letter-spacing: 0.14em;
+      text-transform: uppercase; padding: 0.5rem 1.1rem;
+      border-radius: 2rem;
+      transition: all 0.25s;
+      position: relative;
+    }
+    .top-nav a:hover {
+      color: var(--text);
+      background: rgba(200,151,58,0.12);
+    }
+    .top-nav a.active-nav {
+      color: var(--gold);
+      background: rgba(200,151,58,0.14);
+    }
 
-      /* ── CONTACT ── */
-      .contact-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-        margin-top: 2rem;
-      }
-      .contact-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 0.6rem;
-        padding: 1.6rem;
-      }
-      .contact-card .ci { font-size: 1.5rem; margin-bottom: 0.7rem; }
-      .contact-card h5 {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 0.4rem;
-      }
-      .contact-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+    /* ─── HERO CONTENT ─── */
+    .hero-content {
+      margin-top: auto; max-width: 52rem;
+      position: relative; z-index: 2;
+      transform-style: preserve-3d;
+      margin-left: clamp(2.5rem, 5vw, 4.5rem);
+    }
+    .tag {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      font-size: 0.72rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold); font-weight: 500;
+      margin-bottom: 1.4rem;
+      opacity: 0; animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.45s forwards;
+    }
+    .tag::before {
+      content: ''; display: inline-block; width: 2.8rem; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+    .hero h2 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(3rem,6.5vw,5.8rem); font-weight: 300;
+      line-height: 1.06; margin-bottom: 2rem; font-style: italic;
+      color: var(--text);
+      text-shadow:
+        1px 1px 0 rgba(0,0,0,0.6),
+        3px 3px 0 rgba(0,0,0,0.45),
+        5px 5px 0 rgba(0,0,0,0.3),
+        8px 8px 16px rgba(0,0,0,0.5);
+      opacity: 0; animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.65s forwards;
+      transform: translateZ(20px);
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+      opacity: 0; animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) 0.85s forwards;
+    }
 
-      /* ── FOOTER ── */
-      footer {
-        background: var(--text);
-        color: rgba(255,255,255,0.45);
-        text-align: center;
-        padding: 2rem 1rem;
-        font-size: 0.8rem;
-        letter-spacing: 0.06em;
-      }
-      footer span { color: var(--gold); }
+    /* Buttons */
+    .button {
+      display: inline-block; background: var(--accent);
+      color: #fff; padding: 0.9rem 2.2rem; border-radius: 0.2rem;
+      text-decoration: none; font-weight: 600; font-size: 0.75rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      box-shadow: 0 4px 0 var(--accent-dark), 0 8px 24px rgba(155,24,33,0.4);
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .button::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      pointer-events: none;
+    }
+    .button:hover {
+      background: var(--accent-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 0 #5a0b11, 0 14px 32px rgba(155,24,33,0.5);
+    }
+    .button:active { transform: translateY(1px); box-shadow: 0 2px 0 var(--accent-dark), 0 4px 8px rgba(155,24,33,0.3); }
 
-      /* ── SEPARATOR ── */
-      .sep {
-        border: none;
-        border-top: 1px solid var(--border);
-        width: min(1100px, 92%);
-        margin: 0 auto;
-      }
+    .button-ghost {
+      display: inline-block; border: 1px solid var(--border-strong);
+      color: rgba(240,232,220,0.85); padding: 0.9rem 2.2rem; border-radius: 0.2rem;
+      text-decoration: none; font-weight: 500; font-size: 0.75rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+      box-shadow: 0 4px 0 rgba(200,151,58,0.1), 0 6px 16px rgba(0,0,0,0.3);
+      transition: all 0.2s;
+    }
+    .button-ghost:hover {
+      border-color: var(--gold); color: var(--gold);
+      background: rgba(200,151,58,0.06);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 0 rgba(200,151,58,0.15), 0 12px 24px rgba(0,0,0,0.4);
+    }
 
-      /* ── RESPONSIVE ── */
-      @media (max-width: 860px) {
-        .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-        .about-img { aspect-ratio: 16/7; }
-        .reservation-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-        .contact-grid { grid-template-columns: 1fr 1fr; }
-      }
-      @media (max-width: 600px) {
-        .top-nav { flex-direction: column; align-items: flex-start; }
-        .form-row { grid-template-columns: 1fr; }
-        .contact-grid { grid-template-columns: 1fr; }
-        .about-stats { flex-wrap: wrap; gap: 1.4rem; }
-      }
-    </style>
-  </head>
-  <body>
+    /* ─── SECTION LAYOUT ─── */
+    .section {
+      width: min(1120px, 92%); margin: 0 auto; padding: 5.5rem 0;
+    }
+    .section-label {
+      font-size: 0.68rem; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 0.7rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .section-label::after {
+      content: ''; flex: 0 0 2rem; height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    h3 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(2.1rem,3.8vw,3.2rem); font-weight: 300;
+      margin-bottom: 1rem; line-height: 1.1; color: var(--text);
+      text-shadow: 1px 2px 0 rgba(0,0,0,0.3), 3px 5px 12px rgba(0,0,0,0.2);
+    }
 
-    <!-- Language Bar -->
-    <div class="lang-bar">
-      <button class="lang-btn active" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('fr')">FR</button>
-      <button class="lang-btn" onclick="setLang('de')">DE</button>
-    </div>
+    /* ─── ABOUT ─── */
+    .about-wrap { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4.5rem; align-items: center; margin-top: 1rem;
+    }
+    .about-text p { color: var(--muted); font-size: 1rem; line-height: 1.9; font-weight: 300; }
+    .about-text p + p { margin-top: 1.1rem; }
+    .about-img {
+      border-radius: 0.4rem; overflow: hidden; aspect-ratio: 4/3;
+      transform-style: preserve-3d;
+      transform: perspective(900px) rotateY(-5deg) rotateX(2deg);
+      transition: transform 0.7s cubic-bezier(0.22,1,0.36,1), box-shadow 0.7s ease;
+      box-shadow: 10px 18px 50px rgba(0,0,0,0.5), 20px 36px 90px rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+    }
+    .about-img:hover {
+      transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(-8px) scale(1.02);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.55), 0 6px 18px rgba(0,0,0,0.3);
+    }
+    .about-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-stats {
+      display: flex; gap: 2.5rem; margin-top: 2.5rem; padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.6rem; font-weight: 400; color: var(--gold);
+      line-height: 1; display: inline-block;
+      text-shadow: 2px 3px 0 rgba(155,24,33,0.25), 4px 6px 12px rgba(155,24,33,0.15);
+      transition: transform 0.3s;
+    }
+    .stat-num:hover { transform: scale(1.06) translateZ(10px); }
+    .stat-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.25rem; font-weight: 500; }
 
-    <!-- HERO -->
-    <header class="hero" id="home">
-      <nav class="top-nav">
-        <div class="logo">
-          <h1>Portofino</h1>
-          <span class="logo-sub">Luxembourg</span>
-        </div>
-        <ul>
-          <li><a href="#about" data-i18n="nav_about">About</a></li>
-          <li><a href="#menu" data-i18n="nav_menu">Menu</a></li>
-          <li><a href="#reservations" data-i18n="nav_reserve">Reservations</a></li>
-          <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
-        </ul>
-      </nav>
-      <div class="hero-content">
-        <p class="tag" data-i18n="hero_tag">Authentic Italian Cuisine · Luxembourg</p>
-        <h2 data-i18n="hero_heading">Fresh pasta,<br>wood-fired flavors.</h2>
-        <div class="hero-cta">
-          <a class="button" href="#reservations" data-i18n="hero_cta1">Reserve a table</a>
-          <a class="button-ghost" href="#menu" data-i18n="hero_cta2">View menu</a>
-        </div>
+    /* ─── MENU SECTION — REDESIGNED ─── */
+    .menu-section {
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Large decorative background text */
+    .menu-section::before {
+      content: 'MENU';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotateX(20deg);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28vw; font-weight: 600; font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(200,151,58,0.04);
+      pointer-events: none; user-select: none;
+      white-space: nowrap; z-index: 0;
+      letter-spacing: -0.04em;
+    }
+
+    .menu-inner {
+      width: min(1120px, 92%); margin: 0 auto; padding: 6rem 0;
+      position: relative; z-index: 1;
+    }
+    .menu-header { margin-bottom: 3.5rem; }
+    .menu-note { color: var(--muted); font-size: 0.88rem; letter-spacing: 0.06em; font-weight: 300; margin-top: 0.5rem; }
+
+    /* ─── MENU TABS ─── */
+    .menu-tabs {
+      display: flex; gap: 0; margin-bottom: 3rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 0.3rem; overflow: hidden;
+      width: fit-content;
+      background: rgba(13,11,8,0.8);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(200,151,58,0.06);
+    }
+    .menu-tab {
+      background: none; border: none; border-right: 1px solid var(--border);
+      color: var(--muted); font-family: 'Montserrat', sans-serif;
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 0.85rem 1.6rem; cursor: pointer;
+      transition: all 0.25s; position: relative; white-space: nowrap;
+    }
+    .menu-tab:last-child { border-right: none; }
+    .menu-tab::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--gold); transform: scaleX(0);
+      transition: transform 0.25s cubic-bezier(0.22,1,0.36,1);
+    }
+    .menu-tab:hover { color: var(--text); background: rgba(200,151,58,0.05); }
+    .menu-tab.active {
+      color: var(--gold); background: rgba(200,151,58,0.08);
+    }
+    .menu-tab.active::after { transform: scaleX(1); }
+
+    /* ─── MENU PANEL (exclusive list style) ─── */
+    .menu-panel { display: none; animation: fadeIn 0.4s ease; }
+    .menu-panel.active { display: block; }
+
+    .menu-panel-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 0.4rem; overflow: hidden;
+    }
+
+    .menu-item {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 1.5rem; padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      background: var(--card);
+      transition: background 0.25s, transform 0.2s;
+      position: relative; overflow: hidden;
+      cursor: default;
+    }
+    .menu-item:nth-child(even) { border-right: none; }
+    .menu-item:nth-last-child(-n+2) { border-bottom: none; }
+    .menu-item::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 2px;
+      background: var(--gold); transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+    .menu-item:hover { background: var(--card2); }
+    .menu-item:hover::before { transform: scaleY(1); }
+
+    .menu-item-body { flex: 1; }
+    .menu-item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.18rem; font-weight: 400; color: var(--text);
+      margin-bottom: 0.3rem;
+      transition: color 0.25s;
+    }
+    .menu-item:hover .menu-item-name { color: var(--gold-light); }
+    .menu-item-desc { font-size: 0.78rem; color: var(--muted); font-weight: 300; line-height: 1.5; }
+
+    .menu-item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-weight: 600; color: var(--gold);
+      white-space: nowrap; flex-shrink: 0;
+      text-shadow: 1px 2px 0 rgba(155,24,33,0.2), 2px 4px 8px rgba(155,24,33,0.1);
+    }
+
+    /* Category heading in menu */
+    .menu-cat-head {
+      display: flex; align-items: center; gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .menu-cat-head h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300; font-style: italic;
+      color: var(--text); letter-spacing: 0.04em;
+    }
+    .menu-cat-head::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--border-strong), transparent);
+    }
+
+    /* Featured dish callout */
+    .menu-featured {
+      margin-top: 2.5rem; padding: 2rem 2.5rem;
+      background: linear-gradient(135deg, rgba(155,24,33,0.12), rgba(200,151,58,0.06));
+      border: 1px solid rgba(155,24,33,0.25);
+      border-radius: 0.4rem;
+      display: flex; align-items: center; gap: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .menu-featured::before {
+      content: '★'; position: absolute; right: 2rem; top: 50%;
+      transform: translateY(-50%);
+      font-size: 5rem; color: rgba(200,151,58,0.05);
+      font-family: serif; pointer-events: none;
+    }
+    .menu-featured-label {
+      font-size: 0.65rem; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 0.3rem;
+    }
+    .menu-featured h5 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 400; font-style: italic; color: var(--text);
+    }
+    .menu-featured p { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; font-weight: 300; }
+    .menu-featured-price {
+      margin-left: auto; flex-shrink: 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem; font-weight: 300; color: var(--gold);
+    }
+
+    /* ─── RESERVATION ─── */
+    .reservation-wrap {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .reservation-inner {
+      width: min(1120px, 92%); margin: 0 auto;
+      padding: 5.5rem 0;
+      display: grid; grid-template-columns: 1fr 1.65fr;
+      gap: 5.5rem; align-items: start;
+    }
+    .res-info h3 { color: var(--text); }
+    .res-info p { color: var(--muted); margin-top: 0.9rem; font-size: 0.93rem; line-height: 1.85; font-weight: 300; }
+    .res-detail { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.85rem; }
+    .res-detail-item {
+      display: flex; align-items: flex-start; gap: 0.85rem;
+      font-size: 0.86rem; color: rgba(240,232,220,0.65); font-weight: 300;
+    }
+    .res-detail-item .icon { color: var(--gold); font-size: 0.95rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+    /* Form */
+    .res-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group label {
+      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(240,232,220,0.4); font-weight: 600;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(200,151,58,0.15);
+      border-radius: 0.2rem; color: var(--text);
+      font-family: 'Montserrat', sans-serif; font-size: 0.88rem;
+      padding: 0.8rem 1rem; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(240,232,220,0.2); }
+    .form-group select option { background: #1a1410; color: var(--text); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--gold); background: rgba(200,151,58,0.04);
+      box-shadow: 0 0 0 3px rgba(200,151,58,0.07);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .submit-btn {
+      background: var(--accent); border: none; border-radius: 0.2rem;
+      color: #fff; font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 1rem 2.2rem; cursor: pointer;
+      box-shadow: 0 4px 0 var(--accent-dark), 0 8px 24px rgba(155,24,33,0.3);
+      transition: all 0.2s; align-self: flex-start; margin-top: 0.5rem;
+    }
+    .submit-btn:hover { background: var(--accent-dark); transform: translateY(-3px); box-shadow: 0 7px 0 #5a0b11, 0 14px 30px rgba(155,24,33,0.4); }
+    .submit-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 var(--accent-dark), 0 4px 8px rgba(155,24,33,0.2); }
+
+    .form-success {
+      display: none; background: rgba(200,151,58,0.08);
+      border: 1px solid var(--border-strong); border-radius: 0.3rem;
+      padding: 1.2rem 1.4rem; color: var(--gold);
+      font-size: 0.9rem; line-height: 1.6; margin-top: 0.5rem;
+    }
+    .form-success.visible { display: block; }
+
+    /* ─── CONTACT ─── */
+    .contact-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 2.5rem; }
+    .contact-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 0.4rem; padding: 2rem;
+      transform-style: preserve-3d; will-change: transform;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.3s ease;
+      position: relative; overflow: hidden;
+    }
+    .contact-card::after {
+      content: ''; position: absolute; inset: 0; border-radius: 0.4rem;
+      background: linear-gradient(135deg, rgba(200,151,58,0.08) 0%, rgba(200,151,58,0) 60%);
+      pointer-events: none; opacity: 0; transition: opacity 0.3s;
+    }
+    .contact-card:hover::after { opacity: 1; }
+    .contact-card .ci { font-size: 1.5rem; margin-bottom: 0.9rem; }
+    .contact-card h5 {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 400;
+      margin-bottom: 0.5rem; color: var(--text);
+    }
+    .contact-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.75; font-weight: 300; }
+
+    /* ─── ORNAMENT / DIVIDER ─── */
+    .ornament {
+      text-align: center; color: var(--gold);
+      font-size: 1rem; letter-spacing: 0.45em;
+      margin: 0 auto; opacity: 0.4;
+    }
+    .sep-wrap { padding: 1.5rem 0; }
+    .sep {
+      border: none; border-top: 1px solid var(--border);
+      width: min(1120px, 92%); margin: 0 auto;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border);
+      color: rgba(240,232,220,0.3); text-align: center;
+      padding: 2.5rem 1rem; font-size: 0.75rem; letter-spacing: 0.1em;
+    }
+    footer span { color: var(--gold); }
+    .footer-links {
+      margin-top: 0.9rem;
+      display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
+      gap: 0.6rem; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .footer-links a {
+      color: rgba(240,232,220,0.55); text-decoration: none;
+      border-bottom: 1px solid transparent; padding-bottom: 2px;
+      transition: color .25s, border-color .25s;
+    }
+    .footer-links a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+    .footer-links .dot { color: var(--gold); opacity: 0.5; }
+
+    /* ─── COOKIE BANNER ─── */
+    #cookie-banner {
+      position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%) translateY(140%);
+      z-index: 9000; width: min(720px, calc(100vw - 2rem));
+      background: rgba(13,11,8,0.97); color: var(--cream);
+      border: 1px solid var(--border-strong); border-radius: 14px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+      padding: 1.1rem 1.3rem; transition: transform .55s cubic-bezier(.22,1,.36,1);
+      backdrop-filter: blur(10px);
+    }
+    #cookie-banner.show { transform: translateX(-50%) translateY(0); }
+    .cb-inner { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; }
+    .cb-text { flex: 1 1 320px; font-family: 'Montserrat', sans-serif; }
+    .cb-text strong {
+      display: block; font-family: 'Cormorant Garamond', serif; font-weight: 600;
+      font-size: 1.15rem; color: var(--gold); letter-spacing: 0.04em; margin-bottom: 0.25rem;
+    }
+    .cb-text p { font-size: 0.78rem; line-height: 1.55; color: rgba(240,232,220,0.78); margin: 0; }
+    .cb-actions { display: flex; gap: 0.55rem; flex-shrink: 0; }
+    .cb-btn {
+      font-family: 'Montserrat', sans-serif; font-size: 0.68rem; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 0.7rem 1.1rem; border-radius: 8px; cursor: pointer;
+      border: 1px solid var(--border-strong); transition: all .22s; font-weight: 500;
+    }
+    .cb-ghost { background: transparent; color: rgba(240,232,220,0.7); }
+    .cb-ghost:hover { color: var(--cream); border-color: var(--gold); }
+    .cb-primary {
+      background: var(--accent); color: var(--cream); border-color: var(--accent);
+      box-shadow: 0 4px 0 var(--accent-dark);
+    }
+    .cb-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+    /* ─── LEGAL MODAL ─── */
+    .legal-modal { position: fixed; inset: 0; z-index: 9500; display: none; }
+    .legal-modal.open { display: block; }
+    .legal-backdrop {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.78);
+      backdrop-filter: blur(6px); animation: fadeIn .3s ease;
+    }
+    .legal-panel {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: min(720px, calc(100vw - 2rem)); max-height: 82vh; overflow-y: auto;
+      background: var(--surface); color: var(--cream);
+      border: 1px solid var(--border-strong); border-radius: 14px;
+      padding: 2.2rem 2rem; box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+      animation: fadeUp .45s cubic-bezier(.22,1,.36,1);
+    }
+    .legal-close {
+      position: absolute; top: 0.8rem; right: 1rem; background: transparent; border: 0;
+      color: var(--gold); font-size: 1.8rem; cursor: pointer; line-height: 1; padding: 0.3rem 0.6rem;
+    }
+    .legal-close:hover { color: var(--cream); }
+    .legal-body h2 {
+      font-family: 'Cormorant Garamond', serif; color: var(--gold);
+      font-size: 1.85rem; margin-bottom: 1rem; letter-spacing: 0.02em;
+    }
+    .legal-body h3 {
+      font-family: 'Cormorant Garamond', serif; color: var(--cream);
+      font-size: 1.15rem; margin: 1.3rem 0 0.5rem; letter-spacing: 0.03em;
+    }
+    .legal-body p, .legal-body li {
+      font-family: 'Montserrat', sans-serif; font-size: 0.82rem; line-height: 1.7;
+      color: rgba(240,232,220,0.8); margin-bottom: 0.6rem;
+    }
+    .legal-body ul { padding-left: 1.2rem; margin-bottom: 0.6rem; }
+
+    /* ─── TILT CARDS JS ─── */
+    .tilt-target { transform-style: preserve-3d; will-change: transform; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-img { aspect-ratio: 16/7; }
+      .reservation-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+      .menu-panel-grid { grid-template-columns: 1fr; }
+      .menu-item { border-right: none; }
+      .menu-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+      .menu-item:last-child { border-bottom: none; }
+    }
+    @media (max-width: 600px) {
+      .top-nav { flex-direction: column; align-items: flex-start; }
+      .top-nav ul { flex-wrap: wrap; border-radius: 0.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .about-stats { flex-wrap: wrap; gap: 1.5rem; }
+      .menu-tabs { flex-wrap: wrap; width: 100%; border-radius: 0.3rem; }
+      .menu-featured { flex-direction: column; gap: 1rem; }
+      .menu-featured-price { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="page-veil"></div>
+
+  <!-- Language Bar -->
+  <div class="lang-bar">
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn active" onclick="setLang('de')">DE</button>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero" id="home">
+    <!-- Floating particles -->
+    <div class="hero-particle" style="width:3px;height:3px;left:15%;opacity:0.5;animation-duration:8s;animation-delay:0s;"></div>
+    <div class="hero-particle" style="width:2px;height:2px;left:35%;opacity:0.4;animation-duration:11s;animation-delay:2s;"></div>
+    <div class="hero-particle" style="width:4px;height:4px;left:58%;opacity:0.35;animation-duration:9s;animation-delay:4s;"></div>
+    <div class="hero-particle" style="width:2px;height:2px;left:75%;opacity:0.45;animation-duration:13s;animation-delay:1s;"></div>
+    <div class="hero-particle" style="width:3px;height:3px;left:88%;opacity:0.4;animation-duration:10s;animation-delay:6s;"></div>
+
+    <nav class="top-nav">
+      <div class="logo">
+        <h1>Portofino</h1>
+        <span class="logo-sub">Luxembourg</span>
       </div>
-    </header>
+      <ul>
+        <li><a href="#about" data-i18n="nav_about">About</a></li>
+        <li><a href="#menu" data-i18n="nav_menu">Menu</a></li>
+        <li><a href="#reservations" data-i18n="nav_reserve">Reservations</a></li>
+        <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="hero-content">
+      <p class="tag" data-i18n="hero_tag">Authentic Italian Cuisine · Luxembourg</p>
+      <h2 data-i18n="hero_heading">Fresh pasta,<br>wood-fired flavors.</h2>
+      <div class="hero-cta">
+        <a class="button" href="#reservations" data-i18n="hero_cta1">Reserve a table</a>
+        <a class="button-ghost" href="#menu" data-i18n="hero_cta2">View menu</a>
+      </div>
+    </div>
+  </header>
 
-    <main>
-      <!-- ABOUT -->
-      <section class="section" id="about">
-        <p class="section-label" data-i18n="about_label">Our story</p>
+  <main>
+    <!-- ABOUT -->
+    <section class="about-wrap" id="about">
+      <div class="section">
+        <p class="section-label reveal" data-i18n="about_label">Our story</p>
         <div class="about-grid">
-          <div class="about-text">
+          <div class="about-text reveal-left">
             <h3 data-i18n="about_heading">A taste of Italy in the heart of Luxembourg</h3>
             <p data-i18n="about_p1">Portofino brings the soul of the Italian Riviera to Luxembourg City. Every dish is crafted from seasonal ingredients: handmade pasta rolled fresh each morning, wood-fired focaccia, and classic Mediterranean mains prepared with care.</p>
             <p data-i18n="about_p2">Whether you're joining us for a quiet weekday lunch or a festive dinner with family, our team welcomes you with the warmth and generosity that define Italian hospitality.</p>
             <div class="about-stats">
-              <div>
-                <div class="stat-num">12+</div>
-                <div class="stat-label" data-i18n="stat_years">Years open</div>
-              </div>
-              <div>
-                <div class="stat-num">100%</div>
-                <div class="stat-label" data-i18n="stat_fresh">Fresh pasta daily</div>
-              </div>
-              <div>
-                <div class="stat-num">40+</div>
-                <div class="stat-label" data-i18n="stat_wines">Italian wines</div>
-              </div>
+              <div><div class="stat-num">12+</div><div class="stat-label" data-i18n="stat_years">Years open</div></div>
+              <div><div class="stat-num">100%</div><div class="stat-label" data-i18n="stat_fresh">Fresh pasta daily</div></div>
+              <div><div class="stat-num">40+</div><div class="stat-label" data-i18n="stat_wines">Italian wines</div></div>
             </div>
           </div>
-          <div class="about-img">
+          <div class="about-img reveal-right tilt-target">
             <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80" alt="Restaurant interior" />
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <hr class="sep" />
-
-      <!-- MENU -->
-      <section class="menu-section" id="menu">
-        <div class="menu-inner">
-          <p class="section-label" data-i18n="menu_label">Our kitchen</p>
-          <h3 data-i18n="menu_heading">Popular menu</h3>
-          <p style="color:var(--muted);font-size:0.93rem;" data-i18n="menu_note">A curated selection of guest favourites. Full menu available in-house.</p>
-          <div class="menu-grid">
-            <article class="menu-card">
-              <h4 data-i18n="menu_starters">Starters</h4>
-              <ul>
-                <li><span>Burrata & Tomatoes</span><span>€15</span></li>
-                <li><span>Bruschetta Trio</span><span>€13</span></li>
-                <li><span>Calamari Fritti</span><span>€16</span></li>
-              </ul>
-            </article>
-            <article class="menu-card">
-              <h4 data-i18n="menu_pasta">Pasta</h4>
-              <ul>
-                <li><span>Tagliatelle al Tartufo</span><span>€24</span></li>
-                <li><span>Spaghetti Carbonara</span><span>€22</span></li>
-                <li><span>Lasagna della Casa</span><span>€23</span></li>
-              </ul>
-            </article>
-            <article class="menu-card">
-              <h4 data-i18n="menu_mains">Main courses</h4>
-              <ul>
-                <li><span>Branzino al Forno</span><span>€30</span></li>
-                <li><span>Veal Milanese</span><span>€32</span></li>
-                <li><span>Pollo al Limone</span><span>€26</span></li>
-              </ul>
-            </article>
-            <article class="menu-card">
-              <h4 data-i18n="menu_desserts">Desserts</h4>
-              <ul>
-                <li><span>Tiramisu</span><span>€11</span></li>
-                <li><span>Panna Cotta</span><span>€10</span></li>
-                <li><span>Affogato</span><span>€9</span></li>
-              </ul>
-            </article>
-          </div>
+    <!-- MENU -->
+    <section class="menu-section" id="menu">
+      <div class="menu-inner">
+        <div class="menu-header">
+          <p class="section-label reveal" data-i18n="menu_label">Our kitchen</p>
+          <h3 class="reveal" data-i18n="menu_heading">Popular menu</h3>
+          <p class="menu-note reveal" data-i18n="menu_note">A curated selection of guest favourites. Full menu available in-house.</p>
         </div>
-      </section>
 
-      <!-- RESERVATION -->
-      <section class="reservation-wrap" id="reservations">
-        <div class="reservation-inner">
-          <div class="res-info">
-            <p class="section-label" style="color:rgba(200,151,58,0.8);" data-i18n="res_label">Book a table</p>
-            <h3 data-i18n="res_heading">Reserve your evening</h3>
-            <p data-i18n="res_desc">We look forward to welcoming you. Reservations are recommended, especially on weekends. For groups of 8 or more, please call us directly.</p>
-            <div class="res-detail">
-              <div class="res-detail-item"><span class="icon">📍</span><span>12 Rue de la Cuisine, Luxembourg</span></div>
-              <div class="res-detail-item"><span class="icon">📞</span><span>+352 27 00 45 89</span></div>
-              <div class="res-detail-item"><span class="icon">🕒</span><span data-i18n="hours_text">Tue–Sun: 12:00 – 15:00 &amp; 18:30 – 22:30</span></div>
-              <div class="res-detail-item"><span class="icon">✉️</span><span>reservations@portofino.lu</span></div>
+        <!-- Tabs -->
+        <div class="menu-tabs reveal">
+          <button class="menu-tab active" onclick="showTab('starters')" data-i18n="menu_starters">Starters</button>
+          <button class="menu-tab" onclick="showTab('pasta')" data-i18n="menu_pasta">Pasta</button>
+          <button class="menu-tab" onclick="showTab('mains')" data-i18n="menu_mains">Main courses</button>
+          <button class="menu-tab" onclick="showTab('desserts')" data-i18n="menu_desserts">Desserts</button>
+        </div>
+
+        <!-- Starters -->
+        <div class="menu-panel active" id="tab-starters">
+          <div class="menu-panel-grid stagger-children visible">
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Burrata &amp; Tomatoes</div>
+                <div class="menu-item-desc">Fresh burrata, heirloom tomatoes, aged balsamic</div>
+              </div>
+              <div class="menu-item-price">€15</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Bruschetta Trio</div>
+                <div class="menu-item-desc">Classic, nduja & ricotta, roasted pepper</div>
+              </div>
+              <div class="menu-item-price">€13</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Calamari Fritti</div>
+                <div class="menu-item-desc">Crispy squid rings, aioli, lemon zest</div>
+              </div>
+              <div class="menu-item-price">€16</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Vitello Tonnato</div>
+                <div class="menu-item-desc">Slow-roasted veal, tuna cream, capers</div>
+              </div>
+              <div class="menu-item-price">€18</div>
             </div>
           </div>
+          <div class="menu-featured reveal">
+            <div>
+              <div class="menu-featured-label">Chef's recommendation</div>
+              <h5>Carpaccio di Manzo</h5>
+              <p>Aged Piedmontese beef, shaved Parmigiano, truffle oil, rocket</p>
+            </div>
+            <div class="menu-featured-price">€22</div>
+          </div>
+        </div>
 
-          <div>
-            <div class="res-form" id="reservationForm">
-              <div class="form-row">
-                <div class="form-group">
-                  <label data-i18n="form_first">First name</label>
-                  <input type="text" id="firstName" data-i18n-placeholder="ph_first" placeholder="Marco" />
-                </div>
-                <div class="form-group">
-                  <label data-i18n="form_last">Last name</label>
-                  <input type="text" id="lastName" data-i18n-placeholder="ph_last" placeholder="Rossi" />
-                </div>
+        <!-- Pasta -->
+        <div class="menu-panel" id="tab-pasta">
+          <div class="menu-panel-grid stagger-children">
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Tagliatelle al Tartufo</div>
+                <div class="menu-item-desc">Fresh egg tagliatelle, black truffle, butter, Parmigiano</div>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label data-i18n="form_email">Email</label>
-                  <input type="email" id="email" placeholder="marco@example.com" />
-                </div>
-                <div class="form-group">
-                  <label data-i18n="form_phone">Phone</label>
-                  <input type="tel" id="phone" placeholder="+352 ..." />
-                </div>
+              <div class="menu-item-price">€24</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Spaghetti Carbonara</div>
+                <div class="menu-item-desc">Guanciale, Pecorino Romano, egg yolk, black pepper</div>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label data-i18n="form_date">Date</label>
-                  <input type="date" id="date" />
-                </div>
-                <div class="form-group">
-                  <label data-i18n="form_time">Time</label>
-                  <select id="time">
-                    <option value="">-- select --</option>
-                    <option>12:00</option><option>12:30</option><option>13:00</option>
-                    <option>13:30</option><option>14:00</option><option>14:30</option>
-                    <option>18:30</option><option>19:00</option><option>19:30</option>
-                    <option>20:00</option><option>20:30</option><option>21:00</option>
-                    <option>21:30</option><option>22:00</option>
-                  </select>
-                </div>
+              <div class="menu-item-price">€22</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Lasagna della Casa</div>
+                <div class="menu-item-desc">Slow-cooked ragù, béchamel, house-made pasta sheets</div>
+              </div>
+              <div class="menu-item-price">€23</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Pappardelle al Cinghiale</div>
+                <div class="menu-item-desc">Wild boar ragù, juniper, rosemary, Parmigiano</div>
+              </div>
+              <div class="menu-item-price">€26</div>
+            </div>
+          </div>
+          <div class="menu-featured reveal">
+            <div>
+              <div class="menu-featured-label">Pasta of the season</div>
+              <h5>Cacio e Pepe Risotto</h5>
+              <p>Carnaroli rice, aged Pecorino, Parmigiano, cracked tellicherry pepper</p>
+            </div>
+            <div class="menu-featured-price">€25</div>
+          </div>
+        </div>
+
+        <!-- Mains -->
+        <div class="menu-panel" id="tab-mains">
+          <div class="menu-panel-grid stagger-children">
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Branzino al Forno</div>
+                <div class="menu-item-desc">Whole sea bass, lemon herbs, caponata, olive oil</div>
+              </div>
+              <div class="menu-item-price">€30</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Veal Milanese</div>
+                <div class="menu-item-desc">Breaded veal cutlet, rocket, tomato, Grana Padano</div>
+              </div>
+              <div class="menu-item-price">€32</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Pollo al Limone</div>
+                <div class="menu-item-desc">Free-range chicken, preserved lemon, caper salsa verde</div>
+              </div>
+              <div class="menu-item-price">€26</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Bistecca Fiorentina</div>
+                <div class="menu-item-desc">Dry-aged T-bone, rosemary salt, roasted garlic (for two)</div>
+              </div>
+              <div class="menu-item-price">€68</div>
+            </div>
+          </div>
+          <div class="menu-featured reveal">
+            <div>
+              <div class="menu-featured-label">Wood-fired special</div>
+              <h5>Agnello all'Arrabbiata</h5>
+              <p>Slow-roasted lamb shoulder, fiery tomato, Castelvetrano olives, gremolata</p>
+            </div>
+            <div class="menu-featured-price">€38</div>
+          </div>
+        </div>
+
+        <!-- Desserts -->
+        <div class="menu-panel" id="tab-desserts">
+          <div class="menu-panel-grid stagger-children">
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Tiramisu</div>
+                <div class="menu-item-desc">Classic recipe, espresso-soaked savoiardi, mascarpone cream</div>
+              </div>
+              <div class="menu-item-price">€11</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Panna Cotta</div>
+                <div class="menu-item-desc">Vanilla bean cream, seasonal berry compote</div>
+              </div>
+              <div class="menu-item-price">€10</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Affogato</div>
+                <div class="menu-item-desc">Fior di latte gelato, double espresso, amaretto</div>
+              </div>
+              <div class="menu-item-price">€9</div>
+            </div>
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <div class="menu-item-name">Cannolo Siciliano</div>
+                <div class="menu-item-desc">Crisp shell, ricotta cream, pistachio, candied orange</div>
+              </div>
+              <div class="menu-item-price">€12</div>
+            </div>
+          </div>
+          <div class="menu-featured reveal">
+            <div>
+              <div class="menu-featured-label">Dessert of the house</div>
+              <h5>Torta al Cioccolato</h5>
+              <p>Warm chocolate fondant, Amedei 70%, Tahitian vanilla gelato</p>
+            </div>
+            <div class="menu-featured-price">€14</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESERVATION -->
+    <section class="reservation-wrap" id="reservations">
+      <div class="reservation-inner">
+        <div class="res-info reveal-left">
+          <p class="section-label" data-i18n="res_label">Book a table</p>
+          <h3 data-i18n="res_heading">Reserve your evening</h3>
+          <p data-i18n="res_desc">We look forward to welcoming you. Reservations are recommended, especially on weekends. For groups of 8 or more, please call us directly.</p>
+          <div class="res-detail">
+            <div class="res-detail-item"><span class="icon">📍</span><span>12 Rue de la Cuisine, Luxembourg</span></div>
+            <div class="res-detail-item"><span class="icon">📞</span><span>+352 27 00 45 89</span></div>
+            <div class="res-detail-item"><span class="icon">🕒</span><span data-i18n="hours_text">Tue–Sun: 12:00 – 15:00 &amp; 18:30 – 22:30</span></div>
+            <div class="res-detail-item"><span class="icon">✉️</span><span>reservations@portofino.lu</span></div>
+          </div>
+        </div>
+
+        <div class="reveal-right">
+          <div class="res-form" id="reservationForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="form_first">First name</label>
+                <input type="text" id="firstName" placeholder="Marco" />
               </div>
               <div class="form-group">
-                <label data-i18n="form_guests">Number of guests</label>
-                <select id="guests">
+                <label data-i18n="form_last">Last name</label>
+                <input type="text" id="lastName" placeholder="Rossi" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="form_email">Email</label>
+                <input type="email" id="email" placeholder="marco@example.com" />
+              </div>
+              <div class="form-group">
+                <label data-i18n="form_phone">Phone</label>
+                <input type="tel" id="phone" placeholder="+352 ..." />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="form_date">Date</label>
+                <input type="date" id="date" />
+              </div>
+              <div class="form-group">
+                <label data-i18n="form_time">Time</label>
+                <select id="time">
                   <option value="">-- select --</option>
-                  <option>1</option><option>2</option><option>3</option>
-                  <option>4</option><option>5</option><option>6</option>
-                  <option>7</option><option data-i18n="guests_more">8+ (please call)</option>
+                  <option>12:00</option><option>12:30</option><option>13:00</option>
+                  <option>13:30</option><option>14:00</option><option>14:30</option>
+                  <option>18:30</option><option>19:00</option><option>19:30</option>
+                  <option>20:00</option><option>20:30</option><option>21:00</option>
+                  <option>21:30</option><option>22:00</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label data-i18n="form_notes">Special requests (optional)</label>
-                <textarea id="notes" data-i18n-placeholder="ph_notes" placeholder="Allergies, anniversary, high chair…"></textarea>
-              </div>
-              <div>
-                <button class="submit-btn" onclick="submitReservation()" data-i18n="form_submit">Confirm reservation</button>
-              </div>
-              <div class="form-success" id="formSuccess">
-                <span data-i18n="form_success">✓ Thank you! Your reservation request has been received. We will confirm by email within 2 hours.</span>
-              </div>
+            </div>
+            <div class="form-group">
+              <label data-i18n="form_guests">Number of guests</label>
+              <select id="guests">
+                <option value="">-- select --</option>
+                <option>1</option><option>2</option><option>3</option>
+                <option>4</option><option>5</option><option>6</option>
+                <option>7</option><option data-i18n="guests_more">8+ (please call)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label data-i18n="form_notes">Special requests (optional)</label>
+              <textarea id="notes" placeholder="Allergies, anniversary, high chair…"></textarea>
+            </div>
+            <div>
+              <button class="submit-btn" onclick="submitReservation()" data-i18n="form_submit">Confirm reservation</button>
+            </div>
+            <div class="form-success" id="formSuccess">
+              <span data-i18n="form_success">✓ Thank you! Your reservation request has been received. We will confirm by email within 2 hours.</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- CONTACT -->
-      <section class="section" id="contact">
-        <p class="section-label" data-i18n="contact_label">Find us</p>
-        <h3 data-i18n="contact_heading">Contact & Hours</h3>
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="ci">📍</div>
-            <h5 data-i18n="contact_address_title">Address</h5>
-            <p>12 Rue de la Cuisine<br>Luxembourg-Ville, L-1234<br>Luxembourg</p>
-          </div>
-          <div class="contact-card">
-            <div class="ci">🕒</div>
-            <h5 data-i18n="contact_hours_title">Opening hours</h5>
-            <p data-i18n="contact_hours_body">Tue – Sun: 12:00–15:00<br>Tue – Sun: 18:30–22:30<br>Closed Mondays</p>
-          </div>
-          <div class="contact-card">
-            <div class="ci">📞</div>
-            <h5 data-i18n="contact_reach_title">Reach us</h5>
-            <p>+352 27 00 45 89<br>reservations@portofino.lu</p>
-          </div>
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <p class="section-label reveal" data-i18n="contact_label">Find us</p>
+      <h3 class="reveal" data-i18n="contact_heading">Contact &amp; Hours</h3>
+      <div class="contact-grid stagger-children">
+        <div class="contact-card tilt-target">
+          <div class="ci">📍</div>
+          <h5 data-i18n="contact_address_title">Address</h5>
+          <p>12 Rue de la Cuisine<br>Luxembourg-Ville, L-1234<br>Luxembourg</p>
         </div>
-      </section>
-    </main>
+        <div class="contact-card tilt-target">
+          <div class="ci">🕒</div>
+          <h5 data-i18n="contact_hours_title">Opening hours</h5>
+          <p data-i18n="contact_hours_body">Tue – Sun: 12:00–15:00<br>Tue – Sun: 18:30–22:30<br>Closed Mondays</p>
+        </div>
+        <div class="contact-card tilt-target">
+          <div class="ci">📞</div>
+          <h5 data-i18n="contact_reach_title">Reach us</h5>
+          <p>+352 27 00 45 89<br>reservations@portofino.lu</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <footer>
-      © 2025 <span>Portofino Luxembourg</span> · Authentic Italian Cuisine · All rights reserved
-    </footer>
+  <footer>
+    <div data-i18n="footer_copy">© 2025 <span>Portofino Luxembourg</span> · Authentic Italian Cuisine · All rights reserved</div>
+    <div class="footer-links">
+      <a href="#" data-open="privacy" data-i18n="footer_privacy">Privacy Policy</a>
+      <span class="dot">·</span>
+      <a href="#" data-open="legal" data-i18n="footer_legal">Legal Notice</a>
+      <span class="dot">·</span>
+      <a href="#" data-open="cookies" data-i18n="footer_cookies">Cookie Preferences</a>
+    </div>
+  </footer>
 
-    <script>
-      // ── TRANSLATIONS ──
-      const i18n = {
+  <!-- ─── COOKIE BANNER ─── -->
+  <div id="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+    <div class="cb-inner">
+      <div class="cb-text">
+        <strong data-i18n="cb_title">We use cookies</strong>
+        <p data-i18n="cb_body">We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept", you consent to our use of cookies.</p>
+      </div>
+      <div class="cb-actions">
+        <button class="cb-btn cb-ghost" id="cb-decline" data-i18n="cb_decline">Decline</button>
+        <button class="cb-btn cb-primary" id="cb-accept" data-i18n="cb_accept">Accept all</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── LEGAL MODAL ─── -->
+  <div id="legal-modal" class="legal-modal" aria-hidden="true">
+    <div class="legal-backdrop" data-close></div>
+    <div class="legal-panel" role="dialog" aria-modal="true">
+      <button class="legal-close" data-close aria-label="Close">×</button>
+      <div class="legal-body" id="legal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    // ─── i18n ───
+    const i18n = {
+      en: {
+        nav_about:"About", nav_menu:"Menu", nav_reserve:"Reservations", nav_contact:"Contact",
+        hero_tag:"Authentic Italian Cuisine · Luxembourg",
+        hero_heading:"Fresh pasta,\nwood-fired flavors.",
+        hero_cta1:"Reserve a table", hero_cta2:"View menu",
+        about_label:"Our story",
+        about_heading:"A taste of Italy in the heart of Luxembourg",
+        about_p1:"Portofino brings the soul of the Italian Riviera to Luxembourg City. Every dish is crafted from seasonal ingredients: handmade pasta rolled fresh each morning, wood-fired focaccia, and classic Mediterranean mains prepared with care.",
+        about_p2:"Whether you're joining us for a quiet weekday lunch or a festive dinner with family, our team welcomes you with the warmth and generosity that define Italian hospitality.",
+        stat_years:"Years open", stat_fresh:"Fresh pasta daily", stat_wines:"Italian wines",
+        menu_label:"Our kitchen", menu_heading:"Popular menu",
+        menu_note:"A curated selection of guest favourites. Full menu available in-house.",
+        menu_starters:"Starters", menu_pasta:"Pasta", menu_mains:"Main courses", menu_desserts:"Desserts",
+        res_label:"Book a table", res_heading:"Reserve your evening",
+        res_desc:"We look forward to welcoming you. Reservations are recommended, especially on weekends. For groups of 8 or more, please call us directly.",
+        hours_text:"Tue–Sun: 12:00 – 15:00 & 18:30 – 22:30",
+        form_first:"First name", form_last:"Last name", form_email:"Email", form_phone:"Phone",
+        form_date:"Date", form_time:"Time", form_guests:"Number of guests",
+        form_notes:"Special requests (optional)", form_submit:"Confirm reservation",
+        guests_more:"8+ (please call)",
+        form_success:"✓ Thank you! Your reservation request has been received. We will confirm by email within 2 hours.",
+        contact_label:"Find us", contact_heading:"Contact & Hours",
+        contact_address_title:"Address", contact_hours_title:"Opening hours",
+        contact_hours_body:"Tue – Sun: 12:00–15:00\nTue – Sun: 18:30–22:30\nClosed Mondays",
+        contact_reach_title:"Reach us",
+        footer_copy:'© 2025 <span>Portofino Luxembourg</span> · Authentic Italian Cuisine · All rights reserved',
+        footer_privacy:"Privacy Policy", footer_legal:"Legal Notice", footer_cookies:"Cookie Preferences",
+        cb_title:"We use cookies",
+        cb_body:'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept", you consent to our use of cookies.',
+        cb_decline:"Decline", cb_accept:"Accept all",
+      },
+      fr: {
+        nav_about:"À propos", nav_menu:"Menu", nav_reserve:"Réservations", nav_contact:"Contact",
+        hero_tag:"Cuisine Italienne Authentique · Luxembourg",
+        hero_heading:"Pâtes fraîches,\nsaveurs du four à bois.",
+        hero_cta1:"Réserver une table", hero_cta2:"Voir le menu",
+        about_label:"Notre histoire",
+        about_heading:"Un goût d'Italie au cœur du Luxembourg",
+        about_p1:"Portofino apporte l'âme de la Riviera italienne à Luxembourg-Ville. Chaque plat est élaboré à partir d'ingrédients de saison : pâtes faites à la main chaque matin, focaccia au four à bois et plats méditerranéens classiques préparés avec soin.",
+        about_p2:"Que vous veniez pour un déjeuner tranquille en semaine ou un dîner festif en famille, notre équipe vous accueille avec la chaleur et la générosité qui définissent l'hospitalité italienne.",
+        stat_years:"Ans d'ouverture", stat_fresh:"Pâtes fraîches quotidiennes", stat_wines:"Vins italiens",
+        menu_label:"Notre cuisine", menu_heading:"Menu populaire",
+        menu_note:"Une sélection de plats préférés des clients. Menu complet disponible sur place.",
+        menu_starters:"Entrées", menu_pasta:"Pâtes", menu_mains:"Plats principaux", menu_desserts:"Desserts",
+        res_label:"Réserver", res_heading:"Réservez votre soirée",
+        res_desc:"Nous sommes impatients de vous accueillir. Les réservations sont recommandées, surtout le week-end. Pour les groupes de 8 personnes ou plus, veuillez nous appeler directement.",
+        hours_text:"Mar–Dim: 12h00–15h00 & 18h30–22h30",
+        form_first:"Prénom", form_last:"Nom", form_email:"E-mail", form_phone:"Téléphone",
+        form_date:"Date", form_time:"Heure", form_guests:"Nombre de convives",
+        form_notes:"Demandes spéciales (optionnel)", form_submit:"Confirmer la réservation",
+        guests_more:"8+ (appelez-nous)",
+        form_success:"✓ Merci ! Votre demande de réservation a bien été reçue. Nous confirmerons par e-mail dans les 2 heures.",
+        contact_label:"Nous trouver", contact_heading:"Contact & Horaires",
+        contact_address_title:"Adresse", contact_hours_title:"Heures d'ouverture",
+        contact_hours_body:"Mar–Dim : 12h00–15h00\nMar–Dim : 18h30–22h30\nFermé le lundi",
+        contact_reach_title:"Nous contacter",
+        footer_copy:'© 2025 <span>Portofino Luxembourg</span> · Cuisine Italienne Authentique · Tous droits réservés',
+        footer_privacy:"Politique de confidentialité", footer_legal:"Mentions légales", footer_cookies:"Préférences des cookies",
+        cb_title:"Nous utilisons des cookies",
+        cb_body:'Nous utilisons des cookies pour améliorer votre expérience de navigation, proposer du contenu personnalisé et analyser notre trafic. En cliquant sur « Accepter », vous consentez à notre utilisation des cookies.',
+        cb_decline:"Refuser", cb_accept:"Tout accepter",
+      },
+      de: {
+        nav_about:"Über uns", nav_menu:"Speisekarte", nav_reserve:"Reservierung", nav_contact:"Kontakt",
+        hero_tag:"Authentische Italienische Küche · Luxemburg",
+        hero_heading:"Frische Pasta,\nHolzofengenuss.",
+        hero_cta1:"Tisch reservieren", hero_cta2:"Speisekarte ansehen",
+        about_label:"Unsere Geschichte",
+        about_heading:"Ein Hauch Italien im Herzen Luxemburgs",
+        about_p1:"Portofino bringt die Seele der italienischen Riviera nach Luxemburg-Stadt. Jedes Gericht wird aus saisonalen Zutaten zubereitet: handgemachte Pasta, die jeden Morgen frisch gerollt wird, Holzofenfocaccia und klassische mediterrane Hauptgerichte mit Liebe zubereitet.",
+        about_p2:"Ob Sie zu einem ruhigen Mittagessen unter der Woche oder einem festlichen Abendessen mit der Familie kommen – unser Team empfängt Sie mit der Wärme und Großzügigkeit, die für italienische Gastfreundschaft stehen.",
+        stat_years:"Jahre geöffnet", stat_fresh:"Frische Pasta täglich", stat_wines:"Ital. Weine",
+        menu_label:"Unsere Küche", menu_heading:"Beliebte Gerichte",
+        menu_note:"Eine Auswahl der Gästelieblinge. Die vollständige Speisekarte ist im Restaurant erhältlich.",
+        menu_starters:"Vorspeisen", menu_pasta:"Pasta", menu_mains:"Hauptgerichte", menu_desserts:"Desserts",
+        res_label:"Reservierung", res_heading:"Reservieren Sie Ihren Abend",
+        res_desc:"Wir freuen uns darauf, Sie zu begrüßen. Reservierungen werden empfohlen, besonders am Wochenende. Für Gruppen ab 8 Personen rufen Sie uns bitte direkt an.",
+        hours_text:"Di–So: 12:00–15:00 & 18:30–22:30 Uhr",
+        form_first:"Vorname", form_last:"Nachname", form_email:"E-Mail", form_phone:"Telefon",
+        form_date:"Datum", form_time:"Uhrzeit", form_guests:"Anzahl der Gäste",
+        form_notes:"Besondere Wünsche (optional)", form_submit:"Reservierung bestätigen",
+        guests_more:"8+ (bitte anrufen)",
+        form_success:"✓ Vielen Dank! Ihre Reservierungsanfrage ist eingegangen. Wir bestätigen per E-Mail innerhalb von 2 Stunden.",
+        contact_label:"Uns finden", contact_heading:"Kontakt & Öffnungszeiten",
+        contact_address_title:"Adresse", contact_hours_title:"Öffnungszeiten",
+        contact_hours_body:"Di – So: 12:00–15:00 Uhr\nDi – So: 18:30–22:30 Uhr\nMontags geschlossen",
+        contact_reach_title:"Kontakt",
+        footer_copy:'© 2025 <span>Portofino Luxembourg</span> · Authentische Italienische Küche · Alle Rechte vorbehalten',
+        footer_privacy:"Datenschutz", footer_legal:"Impressum", footer_cookies:"Cookie-Einstellungen",
+        cb_title:"Wir verwenden Cookies",
+        cb_body:'Wir verwenden Cookies, um Ihr Browsererlebnis zu verbessern, personalisierte Inhalte anzubieten und unseren Traffic zu analysieren. Mit „Akzeptieren" stimmen Sie unserer Verwendung von Cookies zu.',
+        cb_decline:"Ablehnen", cb_accept:"Alle akzeptieren",
+      }
+    };
+
+    let currentLang = 'de';
+
+    function setLang(lang) {
+      currentLang = lang;
+      window.currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      const t = i18n[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) {
+          if (key === 'hero_heading' || key === 'contact_hours_body' || key === 'footer_copy') {
+            el.innerHTML = t[key].replace(/\n/g,'<br>');
+          } else { el.textContent = t[key]; }
+        }
+      });
+      document.documentElement.lang = lang;
+      if (typeof window.__applyNavLang === 'function') window.__applyNavLang(lang);
+    }
+
+    // ─── Menu tabs ───
+    function showTab(id) {
+      document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      event.currentTarget.classList.add('active');
+      // trigger stagger on newly visible panel
+      const grid = document.querySelector('#tab-' + id + ' .stagger-children');
+      if (grid) {
+        grid.classList.remove('visible');
+        requestAnimationFrame(() => grid.classList.add('visible'));
+      }
+    }
+
+    // ─── Date min ───
+    const dateInput = document.getElementById('date');
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    dateInput.min = today.toISOString().split('T')[0];
+
+    // ─── Form submit ───
+    function submitReservation() {
+      const t = i18n[currentLang];
+      const fields = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName:  document.getElementById('lastName').value.trim(),
+        email:     document.getElementById('email').value.trim(),
+        date:      document.getElementById('date').value,
+        time:      document.getElementById('time').value,
+        guests:    document.getElementById('guests').value,
+      };
+      if (Object.values(fields).some(v => !v)) {
+        const msg = { en:'Please fill in all required fields.', fr:'Veuillez remplir tous les champs obligatoires.', de:'Bitte alle Pflichtfelder ausfüllen.' };
+        alert(msg[currentLang]); return;
+      }
+      const btn = document.querySelector('.submit-btn');
+      btn.disabled = true; btn.textContent = '...';
+      setTimeout(() => {
+        btn.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('visible');
+        document.getElementById('formSuccess').querySelector('[data-i18n]').textContent = t.form_success;
+      }, 800);
+    }
+
+    // ─── Page veil ───
+    window.addEventListener('load', () => {
+      setTimeout(() => document.getElementById('page-veil').classList.add('done'), 80);
+    });
+
+    // ─── Scroll reveal ───
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .stagger-children').forEach(el => revealObserver.observe(el));
+
+    // ─── Stat counters ───
+    function animateCounter(el) {
+      const text = el.textContent;
+      const numMatch = text.match(/[\d.]+/);
+      if (!numMatch) return;
+      const target = parseFloat(numMatch[0]);
+      const suffix = text.replace(numMatch[0], '');
+      const isFloat = numMatch[0].includes('.');
+      const duration = 1400;
+      const start = performance.now();
+      function step(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        const val = isFloat ? (target * ease).toFixed(1) : Math.round(target * ease);
+        el.textContent = val + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-num').forEach(animateCounter);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    const statsBlock = document.querySelector('.about-stats');
+    if (statsBlock) statObserver.observe(statsBlock);
+
+    // ─── Lightweight hover lift: no mousemove transforms ───
+    if (window.matchMedia('(pointer: fine)').matches) {
+      document.querySelectorAll('.tilt-target').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.transition = 'transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease';
+          card.style.transform = 'translate3d(0,-6px,0) scale(1.01)';
+          card.style.boxShadow = '0 24px 60px rgba(0,0,0,0.42)';
+          card.style.borderColor = 'rgba(200,151,58,0.38)';
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+          card.style.boxShadow = '';
+          card.style.borderColor = '';
+        });
+      });
+    }
+
+    // ─── Active nav on scroll ───
+    const sections = ['home','about','menu','reservations','contact'];
+    const navLinks = document.querySelectorAll('.top-nav a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top < window.innerHeight * 0.5) current = id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('active-nav', a.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+
+  <!-- ─── CINEMATIC 3D CARD NAVIGATOR ─── -->
+  <style>
+    html, body { height: 100%; overflow: hidden; background: #02070b; }
+    body {
+      perspective: 1800px;
+      perspective-origin: 50% 47%;
+      cursor: grab;
+      overscroll-behavior: none;
+    }
+    body.dragging { cursor: grabbing; }
+
+    #cosmos {
+      position: fixed; inset: 0; z-index: -3;
+      background:
+        linear-gradient(180deg, rgba(2,8,13,0.25), rgba(0,0,0,0.92) 76%),
+        radial-gradient(ellipse 70% 34% at 52% 20%, rgba(52,105,128,0.3), transparent 62%),
+        radial-gradient(ellipse 60% 22% at 55% 68%, rgba(26,73,92,0.34), transparent 70%),
+        #02070b;
+    }
+    #cosmos::before,
+    #cosmos::after {
+      content: ''; position: absolute; pointer-events: none;
+      background: linear-gradient(145deg, rgba(95,102,96,0.18), rgba(0,0,0,0.94) 64%);
+      filter: contrast(1.2);
+      transform: skew(-13deg) rotate(-8deg);
+      clip-path: polygon(8% 100%, 28% 18%, 42% 8%, 62% 72%, 82% 36%, 100% 100%);
+    }
+    #cosmos::before { width: 34vw; height: 42vh; left: -5vw; bottom: -5vh; opacity: 0.75; }
+    #cosmos::after { width: 22vw; height: 28vh; right: -4vw; top: 12vh; opacity: 0.42; transform: skew(12deg) rotate(10deg); }
+
+    #depth-lines {
+      position: fixed; inset: 0; z-index: -2; pointer-events: none;
+      background:
+        linear-gradient(115deg, transparent 0 44%, rgba(192,218,224,0.16) 44.2%, transparent 44.7% 100%),
+        linear-gradient(105deg, transparent 0 58%, rgba(200,151,58,0.12) 58.2%, transparent 58.5% 100%);
+      opacity: 0.55;
+    }
+
+    #stage3d {
+      --drag-x: 0px;
+      --drag-r: 0deg;
+      position: fixed; inset: 0;
+      transform-style: preserve-3d;
+      touch-action: pan-y;
+    }
+
+    .page3d {
+      position: absolute;
+      left: 50%; top: 49%;
+      width: min(980px, 74vw);
+      height: min(560px, 56vw, 66vh);
+      aspect-ratio: 16 / 9;
+      overflow-y: auto; overflow-x: hidden;
+      background: rgba(7,8,9,0.96);
+      border: 1px solid rgba(225,230,220,0.16);
+      border-radius: 12px;
+      transform-origin: center center;
+      transition: transform 0.78s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
+      will-change: transform, opacity;
+      backface-visibility: hidden;
+      contain: layout paint style;
+      box-shadow: 0 34px 100px rgba(0,0,0,0.78), 0 0 0 1px rgba(255,255,255,0.08) inset;
+    }
+    .page3d::before {
+      content: ''; position: sticky; display: block; top: 0; height: 1px; z-index: 6;
+      box-shadow: 0 0 70px 18px rgba(150,197,214,0.16), 0 0 0 1px rgba(255,255,255,0.12);
+      pointer-events: none;
+    }
+    .page3d::-webkit-scrollbar { width: 4px; }
+    .page3d::-webkit-scrollbar-thumb { background: rgba(200,151,58,0.42); border-radius: 4px; }
+
+    .page3d.is-active {
+      transform: translate3d(calc(-50% + var(--drag-x)), -50%, 0) rotateX(1.5deg) rotateY(var(--drag-r));
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 4;
+    }
+    .page3d.is-next {
+      transform: translate3d(34%, -50%, -520px) rotateX(4deg) rotateY(-28deg) scale(0.84);
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .page3d.is-prev {
+      transform: translate3d(-134%, -50%, -520px) rotateX(4deg) rotateY(28deg) scale(0.84);
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .page3d.is-hidden {
+      transform: translate3d(-50%, -50%, -980px) scale(0.72);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      visibility: hidden;
+    }
+    body.dragging .page3d.is-active { transition: none; }
+
+    .page3d .hero,
+    .page3d .about-wrap,
+    .page3d .menu-section,
+    .page3d .reservation-wrap,
+    .page3d #contact,
+    .page3d footer { min-height: 100%; border: 0; }
+    .page3d .hero { padding: 1.8rem clamp(1.2rem,4vw,3rem) 3rem; }
+    .page3d .hero h2 { font-size: clamp(2.7rem,6vw,5.1rem); max-width: 78%; }
+    .page3d .hero-content { max-width: 50rem; }
+    .page3d .section,
+    .page3d .menu-inner,
+    .page3d .reservation-inner { width: min(980px, 88%); padding-top: 4rem; padding-bottom: 4rem; }
+
+    #hud {
+      position: fixed; right: clamp(0.8rem, 2.5vw, 2rem); top: 50%;
+      transform: translateY(-50%); z-index: 500;
+      display: flex; flex-direction: column; gap: 0.9rem;
+      padding: 0.8rem 0.48rem;
+      background: rgba(0,0,0,0.62);
+      border: 1px solid rgba(225,230,220,0.18);
+      border-radius: 2rem;
+      box-shadow: 0 16px 46px rgba(0,0,0,0.66);
+    }
+    .hud-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: rgba(240,232,220,0.14);
+      border: 1px solid rgba(200,151,58,0.48);
+      cursor: pointer; position: relative;
+      transition: background 0.22s, transform 0.22s, box-shadow 0.22s;
+    }
+    .hud-dot::after {
+      content: attr(data-label);
+      position: absolute; right: 22px; top: 50%; transform: translateY(-50%);
+      font-family: 'Montserrat', sans-serif; font-size: 0.58rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--cream); white-space: nowrap;
+      opacity: 0; pointer-events: none; text-shadow: 0 2px 14px #000; transition: opacity 0.2s;
+    }
+    .hud-dot:hover::after { opacity: 1; }
+    .hud-dot.active { background: var(--gold); transform: scale(1.45); box-shadow: 0 0 18px rgba(200,151,58,0.8); }
+
+    #pc {
+      position: fixed; left: clamp(1rem, 3.5vw, 4rem); top: 50%;
+      transform: translateY(-50%); z-index: 500;
+      font-family: 'Cormorant Garamond', serif; color: var(--cream); pointer-events: none;
+      text-shadow: 0 6px 24px #000;
+    }
+    #pc .num { display: block; font-size: clamp(2.2rem, 6vw, 5rem); font-weight: 300; line-height: 0.9; }
+    #pc .total { display: block; font-size: 0.72rem; letter-spacing: 0.34em; color: var(--gold); margin-top: 0.6rem; }
+    #pc .label { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.6rem; letter-spacing: 0.34em; text-transform: uppercase; color: rgba(240,232,220,0.64); margin-top: 1rem; writing-mode: vertical-rl; }
+
+    #hint {
+      position: fixed; bottom: 1.35rem; left: 50%; transform: translateX(-50%); z-index: 500;
+      font-family: 'Montserrat', sans-serif; font-size: 0.58rem; letter-spacing: 0.28em;
+      text-transform: uppercase; color: rgba(240,232,220,0.62);
+      padding: 0.75rem 1.2rem; background: rgba(0,0,0,0.62);
+      border: 1px solid rgba(200,151,58,0.28); border-radius: 999px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6); transition: opacity 0.5s;
+    }
+    #hint.fade { opacity: 0; pointer-events: none; }
+    #hint .g { color: var(--gold); }
+
+    @media (max-width: 700px) {
+      .page3d { width: 86vw; height: min(420px, 50vh); aspect-ratio: auto; top: 47%; border-radius: 12px; }
+      .page3d.is-next { transform: translate3d(26%, -50%, -380px) rotateY(-25deg) scale(0.84); opacity: 0.2; }
+      .page3d.is-prev { transform: translate3d(-126%, -50%, -380px) rotateY(25deg) scale(0.84); opacity: 0.2; }
+      .page3d .hero { min-height: 100%; padding: 1.15rem 1.35rem 1.55rem; background-position: center; }
+      .page3d .top-nav { gap: 0.65rem; }
+      .page3d .top-nav h1 { font-size: 1.7rem; }
+      .page3d .logo-sub { font-size: 0.52rem; letter-spacing: 0.28em; }
+      .page3d .top-nav ul { background: rgba(0,0,0,0.48); border-radius: 0.45rem; padding: 0.2rem; }
+      .page3d .top-nav a { font-size: 0.58rem; padding: 0.34rem 0.58rem; letter-spacing: 0.13em; }
+      .page3d .tag { font-size: 0.56rem; letter-spacing: 0.18em; margin-bottom: 0.55rem; }
+      .page3d .tag::before { width: 1.45rem; }
+      .page3d .hero h2 { font-size: clamp(1.95rem, 8vw, 3rem); max-width: 96%; margin-bottom: 0.9rem; }
+      .page3d .hero-cta { gap: 0.55rem; }
+      .page3d .button, .page3d .button-ghost { padding: 0.58rem 1rem; font-size: 0.58rem; box-shadow: 0 3px 0 var(--accent-dark), 0 8px 18px rgba(0,0,0,0.35); }
+      #pc { left: 0.85rem; top: 50%; }
+      #pc .num { font-size: 2.2rem; }
+      #pc .label { font-size: 0.52rem; }
+      #hud { right: 0.7rem; }
+      #hint { bottom: 1rem; max-width: 78vw; text-align: center; line-height: 1.7; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .page3d { transition: opacity 0.2s ease; }
+    }
+    /* ─── FULLSCREEN PAGE OVERRIDE ─── */
+    .page3d {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      max-height: none !important;
+      aspect-ratio: auto !important;
+      left: 0 !important;
+      top: 0 !important;
+      border-radius: 0 !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+    .page3d.is-active {
+      transform: translate3d(var(--drag-x), 0, 0) !important;
+      opacity: 1 !important;
+    }
+    .page3d.is-next {
+      transform: translate3d(100vw, 0, 0) !important;
+      opacity: 0 !important;
+    }
+    .page3d.is-prev {
+      transform: translate3d(-100vw, 0, 0) !important;
+      opacity: 0 !important;
+    }
+    .page3d.is-hidden {
+      transform: translate3d(-100vw, 0, 0) !important;
+      opacity: 0 !important;
+    }
+    body { perspective: none !important; }
+    #cosmos, #depth-lines { display: none; }
+  </style>
+
+  <div id="cosmos"></div>
+  <div id="depth-lines"></div>
+  <div id="pc"><span class="num" id="pcN">01</span><span class="total" id="pcT">/ 06</span><span class="label" id="pcL">Home</span></div>
+  <nav id="hud"></nav>
+  <div id="hint">Scroll <span class="g">·</span> Swipe <span class="g">·</span> Arrows</div>
+
+  <script>
+    const navLabels = {
+      en: { home:'Home', about:'About', menu:'Menu', reserve:'Reserve', contact:'Contact', end:'End' },
+      fr: { home:'Accueil', about:'À propos', menu:'Menu', reserve:'Réserver', contact:'Contact', end:'Fin' },
+      de: { home:'Start', about:'Über uns', menu:'Speisekarte', reserve:'Reservieren', contact:'Kontakt', end:'Ende' },
+    };
+    const sectionSelectors = [
+      { sel: '.hero',             key: 'home' },
+      { sel: '.about-wrap',       key: 'about' },
+      { sel: '.menu-section',     key: 'menu' },
+      { sel: '.reservation-wrap', key: 'reserve' },
+      { sel: '#contact',          key: 'contact' },
+      { sel: 'footer',            key: 'end' },
+    ];
+
+    const stage = document.createElement('div');
+    stage.id = 'stage3d';
+    document.body.appendChild(stage);
+
+    const pages = [];
+    sectionSelectors.forEach(s => {
+      const el = document.querySelector(s.sel);
+      if (!el) return;
+      const page = document.createElement('div');
+      page.className = 'page3d';
+      el.parentNode.removeChild(el);
+      page.appendChild(el);
+      stage.appendChild(page);
+      pages.push({ el: page, key: s.key });
+    });
+
+    // Lift lang bar above stage
+    const langBar = document.querySelector('.lang-bar');
+    if (langBar) { langBar.style.zIndex = 600; document.body.appendChild(langBar); }
+
+    // HUD
+    const hud = document.getElementById('hud');
+    pages.forEach((p, i) => {
+      const d = document.createElement('div');
+      d.className = 'hud-dot';
+      d.dataset.key = p.key;
+      d.addEventListener('click', () => goTo(i));
+      hud.appendChild(d);
+      p.dot = d;
+    });
+
+    function applyNavLang(lang) {
+      const labels = navLabels[lang] || navLabels.en;
+      pages.forEach(p => { if (p.dot) p.dot.dataset.label = labels[p.key] || ''; });
+      if (pages[current]) pcL.textContent = labels[pages[current].key] || '';
+    }
+    window.__applyNavLang = applyNavLang;
+
+    const pcN = document.getElementById('pcN');
+    const pcT = document.getElementById('pcT');
+    const pcL = document.getElementById('pcL');
+    pcT.textContent = '/ ' + String(pages.length).padStart(2,'0');
+
+    let current = 0;
+    let locked = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragX = 0;
+    let dragging = false;
+
+    function render() {
+      stage.style.setProperty('--drag-x', '0px');
+      stage.style.setProperty('--drag-r', '0deg');
+      pages.forEach((p, i) => {
+        p.el.classList.remove('is-active','is-prev','is-next','is-hidden');
+        if (i === current)        p.el.classList.add('is-active');
+        else if (i === current-1) p.el.classList.add('is-prev');
+        else if (i === current+1) p.el.classList.add('is-next');
+        else                       p.el.classList.add('is-hidden');
+        if (p.dot) p.dot.classList.toggle('active', i === current);
+      });
+      pcN.textContent = String(current+1).padStart(2,'0');
+      pcL.textContent = (navLabels[window.currentLang || 'en'] || navLabels.en)[pages[current].key] || '';
+    }
+
+    function goTo(i) {
+      if (locked || i < 0 || i >= pages.length || i === current) return;
+      locked = true;
+      current = i;
+      if (pages[current]) pages[current].el.scrollTop = 0;
+      render();
+      document.getElementById('hint').classList.add('fade');
+      setTimeout(() => { locked = false; }, 780);
+    }
+    render();
+    setLang('de');
+
+    // Wheel — horizontal swipes advance instantly; vertical scroll works inside each card
+    let wheelLock = 0;
+    window.addEventListener('wheel', (e) => {
+      const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.15;
+      const active = pages[current]?.el;
+      if (horizontal) {
+        e.preventDefault();
+        const now = Date.now();
+        if (now - wheelLock < 650 || Math.abs(e.deltaX) < 8) return;
+        wheelLock = now;
+        goTo(current + (e.deltaX > 0 ? 1 : -1));
+        return;
+      }
+      if (active) {
+        const top    = active.scrollTop <= 2;
+        const bot    = active.scrollTop + active.clientHeight >= active.scrollHeight - 2;
+        if (e.deltaY > 0 && !bot) return;
+        if (e.deltaY < 0 && !top) return;
+      }
+      e.preventDefault();
+      const now = Date.now();
+      if (now - wheelLock < 800) return;
+      if (Math.abs(e.deltaY) < 8) return;
+      wheelLock = now;
+      goTo(current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: false });
+
+    // Mouse / touch drag — like the reference video, swipe sideways to move between cards
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('input, textarea, select, button, a')) return;
+      dragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      dragX = 0;
+      document.body.classList.add('dragging');
+      stage.setPointerCapture(e.pointerId);
+    });
+    stage.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      dragX = e.clientX - dragStartX;
+      const limited = Math.max(-170, Math.min(170, dragX));
+      stage.style.setProperty('--drag-x', `${limited * 0.42}px`);
+      stage.style.setProperty('--drag-r', `${limited / 38}deg`);
+    });
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      document.body.classList.remove('dragging');
+      const dy = e.clientY - dragStartY;
+      const shouldPage = Math.abs(dragX) > 72 && Math.abs(dragX) > Math.abs(dy) * 1.12;
+      if (shouldPage) goTo(current + (dragX < 0 ? 1 : -1));
+      else render();
+    }
+    stage.addEventListener('pointerup', endDrag);
+    stage.addEventListener('pointercancel', endDrag);
+    stage.addEventListener('lostpointercapture', () => {
+      if (!dragging) return;
+      dragging = false;
+      document.body.classList.remove('dragging');
+      render();
+    });
+
+    // Keyboard
+    window.addEventListener('keydown', (e) => {
+      if (e.target.matches('input, textarea, select')) return;
+      if (['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); goTo(current+1); }
+      else if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key))    { e.preventDefault(); goTo(current-1); }
+      else if (e.key === 'Home') goTo(0);
+      else if (e.key === 'End')  goTo(pages.length-1);
+    });
+
+    // Hook nav anchors
+    const map = { '#home':0, '#about':1, '#menu':2, '#reservations':3, '#contact':4 };
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const h = a.getAttribute('href');
+        if (map[h] != null) { e.preventDefault(); goTo(map[h]); }
+      });
+    });
+  </script>
+
+  <script>
+    // ─── COOKIE BANNER ───
+    (function() {
+      const banner = document.getElementById('cookie-banner');
+      const KEY = 'portofino_cookie_consent';
+      function show() { setTimeout(() => banner.classList.add('show'), 900); }
+      function hide(value) {
+        try { localStorage.setItem(KEY, value); } catch (e) {}
+        banner.classList.remove('show');
+      }
+      let consent = null;
+      try { consent = localStorage.getItem(KEY); } catch (e) {}
+      if (!consent) show();
+      document.getElementById('cb-accept').addEventListener('click', () => hide('accepted'));
+      document.getElementById('cb-decline').addEventListener('click', () => hide('declined'));
+
+      // ─── LEGAL MODAL ───
+      const modal = document.getElementById('legal-modal');
+      const body = document.getElementById('legal-body');
+      const content = {
         en: {
-          nav_about: "About", nav_menu: "Menu", nav_reserve: "Reservations", nav_contact: "Contact",
-          hero_tag: "Authentic Italian Cuisine · Luxembourg",
-          hero_heading: "Fresh pasta,\nwood-fired flavors.",
-          hero_cta1: "Reserve a table", hero_cta2: "View menu",
-          about_label: "Our story",
-          about_heading: "A taste of Italy in the heart of Luxembourg",
-          about_p1: "Portofino brings the soul of the Italian Riviera to Luxembourg City. Every dish is crafted from seasonal ingredients: handmade pasta rolled fresh each morning, wood-fired focaccia, and classic Mediterranean mains prepared with care.",
-          about_p2: "Whether you're joining us for a quiet weekday lunch or a festive dinner with family, our team welcomes you with the warmth and generosity that define Italian hospitality.",
-          stat_years: "Years open", stat_fresh: "Fresh pasta daily", stat_wines: "Italian wines",
-          menu_label: "Our kitchen", menu_heading: "Popular menu",
-          menu_note: "A curated selection of guest favourites. Full menu available in-house.",
-          menu_starters: "Starters", menu_pasta: "Pasta", menu_mains: "Main courses", menu_desserts: "Desserts",
-          res_label: "Book a table", res_heading: "Reserve your evening",
-          res_desc: "We look forward to welcoming you. Reservations are recommended, especially on weekends. For groups of 8 or more, please call us directly.",
-          hours_text: "Tue–Sun: 12:00 – 15:00 & 18:30 – 22:30",
-          form_first: "First name", form_last: "Last name", form_email: "Email", form_phone: "Phone",
-          form_date: "Date", form_time: "Time", form_guests: "Number of guests",
-          form_notes: "Special requests (optional)", form_submit: "Confirm reservation",
-          ph_first: "Marco", ph_last: "Rossi", ph_notes: "Allergies, anniversary, high chair…",
-          guests_more: "8+ (please call)",
-          form_success: "✓ Thank you! Your reservation request has been received. We will confirm by email within 2 hours.",
-          contact_label: "Find us", contact_heading: "Contact & Hours",
-          contact_address_title: "Address", contact_hours_title: "Opening hours",
-          contact_hours_body: "Tue – Sun: 12:00–15:00\nTue – Sun: 18:30–22:30\nClosed Mondays",
-          contact_reach_title: "Reach us",
+          privacy: `
+            <h2>Privacy Policy</h2>
+            <p><em>Last updated: 2025</em></p>
+            <p>Portofino Luxembourg ("we", "us", "our") respects your privacy and is committed to protecting your personal data in accordance with the EU General Data Protection Regulation (GDPR) and Luxembourg data protection law.</p>
+            <h3>Data we collect</h3>
+            <ul>
+              <li>Reservation details (name, email, phone, party size, date and time)</li>
+              <li>Contact form submissions</li>
+              <li>Technical data (IP address, browser type) via cookies</li>
+            </ul>
+            <h3>How we use your data</h3>
+            <p>We use your data solely to manage reservations, respond to enquiries, and improve our website. We do not sell or share your data with third parties for marketing purposes.</p>
+            <h3>Your rights</h3>
+            <p>You have the right to access, rectify, erase, or restrict the processing of your personal data. To exercise these rights, contact us at <strong>contact@portofino.lu</strong>.</p>
+            <h3>Cookies</h3>
+            <p>We use essential cookies to ensure the website functions, and optional analytics cookies (only with your consent) to understand how visitors use the site.</p>
+          `,
+          legal: `
+            <h2>Legal Notice</h2>
+            <h3>Publisher</h3>
+            <p><strong>Portofino Luxembourg S.à r.l.</strong><br>Authentic Italian Restaurant<br>Luxembourg City, Grand Duchy of Luxembourg</p>
+            <h3>Contact</h3>
+            <p>Email: contact@portofino.lu<br>Phone: +352 00 00 00 00</p>
+            <h3>Registration</h3>
+            <p>Registered with the Luxembourg Trade and Companies Register (RCS).<br>VAT Number: LU00000000</p>
+            <h3>Hosting</h3>
+            <p>This website is hosted by Lovable Cloud.</p>
+            <h3>Intellectual property</h3>
+            <p>All content on this website (text, images, logos, design) is the exclusive property of Portofino Luxembourg and is protected under Luxembourg and international copyright law. Any reproduction without prior written consent is prohibited.</p>
+            <h3>Applicable law</h3>
+            <p>This website and its content are governed by Luxembourg law. Any dispute shall fall under the exclusive jurisdiction of the courts of Luxembourg.</p>
+          `,
+          cookies: `
+            <h2>Cookie Preferences</h2>
+            <p>This website uses cookies to enhance your experience. You can manage your preferences below.</p>
+            <h3>Essential cookies</h3>
+            <p>Required for the website to function. Always active.</p>
+            <h3>Analytics cookies</h3>
+            <p>Help us understand how visitors interact with the website. Only enabled with your consent.</p>
+            <p style="margin-top:1.5rem;"><button class="cb-btn cb-primary" onclick="localStorage.removeItem('portofino_cookie_consent');location.reload()">Reset preferences</button></p>
+          `
         },
         fr: {
-          nav_about: "À propos", nav_menu: "Menu", nav_reserve: "Réservations", nav_contact: "Contact",
-          hero_tag: "Cuisine italienne authentique · Luxembourg",
-          hero_heading: "Pâtes fraîches,\nsaveurs au feu de bois.",
-          hero_cta1: "Réserver une table", hero_cta2: "Voir le menu",
-          about_label: "Notre histoire",
-          about_heading: "Un goût d'Italie au cœur du Luxembourg",
-          about_p1: "Portofino vous transporte sur la Riviera italienne au cœur de la ville de Luxembourg. Chaque plat est préparé à partir d'ingrédients de saison : pâtes maison fraîches chaque matin, focaccia au feu de bois et plats méditerranéens traditionnels préparés avec soin.",
-          about_p2: "Que vous veniez pour un déjeuner tranquille en semaine ou un dîner festif en famille, notre équipe vous accueille avec la chaleur et la générosité de l'hospitalité italienne.",
-          stat_years: "Années d'ouverture", stat_fresh: "Pâtes fraîches / jour", stat_wines: "Vins italiens",
-          menu_label: "Notre cuisine", menu_heading: "Menu populaire",
-          menu_note: "Une sélection de plats favoris. Menu complet disponible sur place.",
-          menu_starters: "Entrées", menu_pasta: "Pâtes", menu_mains: "Plats principaux", menu_desserts: "Desserts",
-          res_label: "Réserver", res_heading: "Réservez votre soirée",
-          res_desc: "Nous avons hâte de vous accueillir. Les réservations sont recommandées, surtout le week-end. Pour les groupes de 8 personnes ou plus, veuillez nous appeler directement.",
-          hours_text: "Mar–Dim : 12h00–15h00 & 18h30–22h30",
-          form_first: "Prénom", form_last: "Nom", form_email: "E-mail", form_phone: "Téléphone",
-          form_date: "Date", form_time: "Heure", form_guests: "Nombre de convives",
-          form_notes: "Demandes spéciales (optionnel)", form_submit: "Confirmer la réservation",
-          ph_first: "Jean", ph_last: "Dupont", ph_notes: "Allergies, anniversaire, chaise haute…",
-          guests_more: "8+ (veuillez appeler)",
-          form_success: "✓ Merci ! Votre demande de réservation a bien été reçue. Nous vous confirmerons par e-mail dans les 2 heures.",
-          contact_label: "Nous trouver", contact_heading: "Contact & Horaires",
-          contact_address_title: "Adresse", contact_hours_title: "Horaires d'ouverture",
-          contact_hours_body: "Mar – Dim : 12h00–15h00\nMar – Dim : 18h30–22h30\nFermé le lundi",
-          contact_reach_title: "Nous contacter",
+          privacy: `
+            <h2>Politique de confidentialité</h2>
+            <p><em>Dernière mise à jour : 2025</em></p>
+            <p>Portofino Luxembourg (« nous », « notre ») respecte votre vie privée et s'engage à protéger vos données personnelles conformément au Règlement général sur la protection des données (RGPD) de l'UE et à la loi luxembourgeoise sur la protection des données.</p>
+            <h3>Données que nous collectons</h3>
+            <ul>
+              <li>Détails de réservation (nom, e-mail, téléphone, nombre de convives, date et heure)</li>
+              <li>Soumissions du formulaire de contact</li>
+              <li>Données techniques (adresse IP, type de navigateur) via les cookies</li>
+            </ul>
+            <h3>Utilisation de vos données</h3>
+            <p>Nous utilisons vos données uniquement pour gérer les réservations, répondre aux demandes et améliorer notre site. Nous ne vendons ni ne partageons vos données à des tiers à des fins marketing.</p>
+            <h3>Vos droits</h3>
+            <p>Vous avez le droit d'accéder, de rectifier, d'effacer ou de restreindre le traitement de vos données personnelles. Pour exercer ces droits, contactez-nous à <strong>contact@portofino.lu</strong>.</p>
+            <h3>Cookies</h3>
+            <p>Nous utilisons des cookies essentiels pour assurer le fonctionnement du site, et des cookies d'analyse optionnels (uniquement avec votre consentement) pour comprendre comment les visiteurs utilisent le site.</p>
+          `,
+          legal: `
+            <h2>Mentions légales</h2>
+            <h3>Éditeur</h3>
+            <p><strong>Portofino Luxembourg S.à r.l.</strong><br>Restaurant italien authentique<br>Luxembourg-Ville, Grand-Duché de Luxembourg</p>
+            <h3>Contact</h3>
+            <p>E-mail : contact@portofino.lu<br>Téléphone : +352 00 00 00 00</p>
+            <h3>Immatriculation</h3>
+            <p>Inscrit au Registre de Commerce et des Sociétés du Luxembourg (RCS).<br>Numéro de TVA : LU00000000</p>
+            <h3>Hébergement</h3>
+            <p>Ce site est hébergé par Lovable Cloud.</p>
+            <h3>Propriété intellectuelle</h3>
+            <p>L'ensemble du contenu de ce site (textes, images, logos, design) est la propriété exclusive de Portofino Luxembourg et est protégé par le droit d'auteur luxembourgeois et international. Toute reproduction sans autorisation écrite préalable est interdite.</p>
+            <h3>Droit applicable</h3>
+            <p>Ce site et son contenu sont régis par le droit luxembourgeois. Tout litige relèvera de la compétence exclusive des tribunaux de Luxembourg.</p>
+          `,
+          cookies: `
+            <h2>Préférences des cookies</h2>
+            <p>Ce site utilise des cookies pour améliorer votre expérience. Vous pouvez gérer vos préférences ci-dessous.</p>
+            <h3>Cookies essentiels</h3>
+            <p>Nécessaires au fonctionnement du site. Toujours actifs.</p>
+            <h3>Cookies d'analyse</h3>
+            <p>Nous aident à comprendre comment les visiteurs interagissent avec le site. Activés uniquement avec votre consentement.</p>
+            <p style="margin-top:1.5rem;"><button class="cb-btn cb-primary" onclick="localStorage.removeItem('portofino_cookie_consent');location.reload()">Réinitialiser les préférences</button></p>
+          `
         },
         de: {
-          nav_about: "Über uns", nav_menu: "Speisekarte", nav_reserve: "Reservierungen", nav_contact: "Kontakt",
-          hero_tag: "Authentische italienische Küche · Luxemburg",
-          hero_heading: "Frische Pasta,\nholzbefeuerte Aromen.",
-          hero_cta1: "Tisch reservieren", hero_cta2: "Speisekarte ansehen",
-          about_label: "Unsere Geschichte",
-          about_heading: "Ein Hauch von Italien im Herzen Luxemburgs",
-          about_p1: "Portofino bringt die Seele der italienischen Riviera nach Luxemburg-Stadt. Jedes Gericht wird aus saisonalen Zutaten zubereitet: frisch gerollte handgemachte Pasta jeden Morgen, holzgefeuerte Focaccia und klassische Mittelmeerspeisen mit Sorgfalt zubereitet.",
-          about_p2: "Ob Sie zu einem ruhigen Mittagessen unter der Woche oder einem festlichen Abendessen mit der Familie kommen – unser Team empfängt Sie mit der Wärme und Großzügigkeit, die für italienische Gastfreundschaft stehen.",
-          stat_years: "Jahre geöffnet", stat_fresh: "Frische Pasta täglich", stat_wines: "Ital. Weine",
-          menu_label: "Unsere Küche", menu_heading: "Beliebte Gerichte",
-          menu_note: "Eine Auswahl der Gästelieblinge. Die vollständige Speisekarte ist im Restaurant erhältlich.",
-          menu_starters: "Vorspeisen", menu_pasta: "Pasta", menu_mains: "Hauptgerichte", menu_desserts: "Desserts",
-          res_label: "Reservierung", res_heading: "Reservieren Sie Ihren Abend",
-          res_desc: "Wir freuen uns darauf, Sie zu begrüßen. Reservierungen werden empfohlen, besonders am Wochenende. Für Gruppen ab 8 Personen rufen Sie uns bitte direkt an.",
-          hours_text: "Di–So: 12:00–15:00 & 18:30–22:30 Uhr",
-          form_first: "Vorname", form_last: "Nachname", form_email: "E-Mail", form_phone: "Telefon",
-          form_date: "Datum", form_time: "Uhrzeit", form_guests: "Anzahl der Gäste",
-          form_notes: "Besondere Wünsche (optional)", form_submit: "Reservierung bestätigen",
-          ph_first: "Hans", ph_last: "Müller", ph_notes: "Allergien, Jahrestag, Kinderstuhl…",
-          guests_more: "8+ (bitte anrufen)",
-          form_success: "✓ Vielen Dank! Ihre Reservierungsanfrage ist eingegangen. Wir bestätigen per E-Mail innerhalb von 2 Stunden.",
-          contact_label: "Uns finden", contact_heading: "Kontakt & Öffnungszeiten",
-          contact_address_title: "Adresse", contact_hours_title: "Öffnungszeiten",
-          contact_hours_body: "Di – So: 12:00–15:00 Uhr\nDi – So: 18:30–22:30 Uhr\nMontags geschlossen",
-          contact_reach_title: "Kontakt",
+          privacy: `
+            <h2>Datenschutzerklärung</h2>
+            <p><em>Letzte Aktualisierung: 2025</em></p>
+            <p>Portofino Luxembourg („wir", „uns", „unser") respektiert Ihre Privatsphäre und verpflichtet sich, Ihre personenbezogenen Daten gemäß der EU-Datenschutz-Grundverordnung (DSGVO) und dem luxemburgischen Datenschutzrecht zu schützen.</p>
+            <h3>Daten, die wir erheben</h3>
+            <ul>
+              <li>Reservierungsdetails (Name, E-Mail, Telefon, Personenzahl, Datum und Uhrzeit)</li>
+              <li>Einsendungen über das Kontaktformular</li>
+              <li>Technische Daten (IP-Adresse, Browsertyp) über Cookies</li>
+            </ul>
+            <h3>Verwendung Ihrer Daten</h3>
+            <p>Wir verwenden Ihre Daten ausschließlich zur Verwaltung von Reservierungen, zur Beantwortung von Anfragen und zur Verbesserung unserer Website. Wir verkaufen oder teilen Ihre Daten nicht zu Marketingzwecken mit Dritten.</p>
+            <h3>Ihre Rechte</h3>
+            <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung oder Einschränkung der Verarbeitung Ihrer personenbezogenen Daten. Um diese Rechte auszuüben, kontaktieren Sie uns unter <strong>contact@portofino.lu</strong>.</p>
+            <h3>Cookies</h3>
+            <p>Wir verwenden essenzielle Cookies, um die Funktion der Website sicherzustellen, sowie optionale Analyse-Cookies (nur mit Ihrer Einwilligung), um zu verstehen, wie Besucher die Website nutzen.</p>
+          `,
+          legal: `
+            <h2>Impressum</h2>
+            <h3>Herausgeber</h3>
+            <p><strong>Portofino Luxembourg S.à r.l.</strong><br>Authentisches italienisches Restaurant<br>Luxemburg-Stadt, Großherzogtum Luxemburg</p>
+            <h3>Kontakt</h3>
+            <p>E-Mail: contact@portofino.lu<br>Telefon: +352 00 00 00 00</p>
+            <h3>Registrierung</h3>
+            <p>Eingetragen im Handels- und Gesellschaftsregister Luxemburg (RCS).<br>USt-IdNr.: LU00000000</p>
+            <h3>Hosting</h3>
+            <p>Diese Website wird von Lovable Cloud gehostet.</p>
+            <h3>Geistiges Eigentum</h3>
+            <p>Alle Inhalte dieser Website (Texte, Bilder, Logos, Design) sind ausschließliches Eigentum von Portofino Luxembourg und sind durch luxemburgisches und internationales Urheberrecht geschützt. Jede Vervielfältigung ohne vorherige schriftliche Zustimmung ist untersagt.</p>
+            <h3>Anwendbares Recht</h3>
+            <p>Diese Website und ihre Inhalte unterliegen luxemburgischem Recht. Für alle Streitigkeiten sind ausschließlich die Gerichte Luxemburgs zuständig.</p>
+          `,
+          cookies: `
+            <h2>Cookie-Einstellungen</h2>
+            <p>Diese Website verwendet Cookies, um Ihr Erlebnis zu verbessern. Sie können Ihre Einstellungen unten verwalten.</p>
+            <h3>Essenzielle Cookies</h3>
+            <p>Für die Funktion der Website erforderlich. Immer aktiv.</p>
+            <h3>Analyse-Cookies</h3>
+            <p>Helfen uns zu verstehen, wie Besucher mit der Website interagieren. Nur mit Ihrer Einwilligung aktiviert.</p>
+            <p style="margin-top:1.5rem;"><button class="cb-btn cb-primary" onclick="localStorage.removeItem('portofino_cookie_consent');location.reload()">Einstellungen zurücksetzen</button></p>
+          `
         }
       };
-
-      let currentLang = 'en';
-
-      function setLang(lang) {
-        currentLang = lang;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
-
-        const t = i18n[lang];
-
-        // Text nodes
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const key = el.getAttribute('data-i18n');
-          if (t[key] !== undefined) {
-            // preserve line breaks for hero heading
-            if (key === 'hero_heading') {
-              el.innerHTML = t[key].replace(/\n/g, '<br>');
-            } else if (key === 'contact_hours_body') {
-              el.innerHTML = t[key].replace(/\n/g, '<br>');
-            } else {
-              el.textContent = t[key];
-            }
+      let currentModalKey = null;
+      function openModal(key) {
+        currentModalKey = key;
+        const lang = window.currentLang || 'de';
+        body.innerHTML = (content[lang] && content[lang][key]) || content.en[key] || '';
+        body.parentElement.scrollTop = 0;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+      }
+      function closeModal() {
+        currentModalKey = null;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+      }
+      // Re-render modal contents when language changes while open
+      const origSetLang = window.setLang;
+      if (typeof origSetLang === 'function') {
+        window.setLang = function(lang) {
+          origSetLang(lang);
+          if (currentModalKey && modal.classList.contains('open')) {
+            body.innerHTML = (content[lang] && content[lang][currentModalKey]) || content.en[currentModalKey] || '';
           }
-        });
-
-        // Placeholders
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-          const key = el.getAttribute('data-i18n-placeholder');
-          if (t[key]) el.setAttribute('placeholder', t[key]);
-        });
-
-        // Update html lang
-        document.documentElement.lang = lang;
-      }
-
-      // ── DATE MIN ──
-      const dateInput = document.getElementById('date');
-      const today = new Date();
-      today.setDate(today.getDate() + 1);
-      dateInput.min = today.toISOString().split('T')[0];
-
-      // ── FORM SUBMIT ──
-      function submitReservation() {
-        const t = i18n[currentLang];
-        const fields = {
-          firstName: document.getElementById('firstName').value.trim(),
-          lastName:  document.getElementById('lastName').value.trim(),
-          email:     document.getElementById('email').value.trim(),
-          date:      document.getElementById('date').value,
-          time:      document.getElementById('time').value,
-          guests:    document.getElementById('guests').value,
         };
-
-        const missing = Object.values(fields).some(v => !v);
-        if (missing) {
-          const msg = { en: 'Please fill in all required fields.', fr: 'Veuillez remplir tous les champs obligatoires.', de: 'Bitte alle Pflichtfelder ausfüllen.' };
-          alert(msg[currentLang]);
-          return;
-        }
-
-        // Simulate success
-        const btn = document.querySelector('.submit-btn');
-        btn.disabled = true;
-        btn.textContent = '...';
-        setTimeout(() => {
-          btn.style.display = 'none';
-          document.getElementById('formSuccess').classList.add('visible');
-          document.getElementById('formSuccess').querySelector('[data-i18n]').textContent = t.form_success;
-        }, 800);
       }
-    </script>
-  </body>
+      document.querySelectorAll('[data-open]').forEach(el => {
+        el.addEventListener('click', (e) => { e.preventDefault(); openModal(el.dataset.open); });
+      });
+      modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    })();
+  </script>
+</body>
 </html>
